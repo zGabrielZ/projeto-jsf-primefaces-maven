@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:o="http://omnifaces.org/ui">
+
+	<ui:composition template="/layout/cadastro/Cadastrar.xhtml" >
+
+	<ui:define name="titulo">
+			<h1>Detalhe da turma : #{turmaDetalheController.turma.nomeTurma}</h1>
+		
+			<div id="btnVoltar" style="margin-bottom:10px; margin-top: 10px;" >
+				<h:form id="frmBtnConsultaAluno">
+					<p:commandButton value="Voltar" ajax="false" actionListener="#{navegacaoController.consultaTurma}" />
+				</h:form>
+			</div>
+		
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<o:form id="detalheTurmaForm" includeRequestParams="true" >
+
+
+			<p:inputText id="codigo" 
+				label="Código" type="hidden"></p:inputText>
+
+			<div align="center">
+				<h:panelGrid columns="2" style="text-align: center">
+					<p:outputLabel for="numero" value="Número: " />
+					<h:outputText label="Número" value="#{turmaDetalheController.turma.numeroTurma}"
+						id="numero" size="5" maxlength="5"
+						/>
+
+					<p:outputLabel for="turno" value="Turno: " />
+					<h:outputText value="#{turmaDetalheController.turma.turno.descricao}"
+						label="Turno" id="turno">
+					</h:outputText>
+					
+					<p:outputLabel for="vaga" value="Vaga: " />
+					<h:outputText value="#{turmaDetalheController.turma.vagas}"
+						label="Vagas" id="vaga">
+					</h:outputText>
+
+				</h:panelGrid>
+			</div>
+
+			<div>
+				<p:dataTable id="dataTableAlunos"
+					value="#{turmaDetalheController.turma.alunos}" var="aluno"
+					style="padding-top:20px;" rows="5" paginator="true"
+					paginatorPosition="bottom"
+					rendered="#{not empty turmaDetalheController.turma.alunos}"
+					emptyMessage="Sua consulta não retornou registros.">
+
+					<f:facet name="header">
+            			Alunos        			
+            		</f:facet>
+
+					<p:inputText id="codigo" value="#{aluno.id}" label="Código"
+						type="hidden" />
+
+					<p:column style="width:200px;">
+						<f:facet name="header">Nome</f:facet>
+						<h:outputText value="#{aluno.nomeCompleto}" />
+					</p:column>
+
+					<p:column style="width:150px;">
+						<f:facet name="header">CPF</f:facet>
+						<h:outputText value="#{aluno.cpf}" />
+					</p:column>
+
+					<p:column style="width:110px;">
+						<f:facet name="header">Sexo</f:facet>
+						<h:outputText value="#{aluno.sexo.descricao}" />
+					</p:column>
+
+					<p:column style="width:140px;">
+						<f:facet name="header">Data de nascimento</f:facet>
+						<h:outputText value="#{aluno.dataNascimento}">
+							<f:convertDateTime pattern="dd/MM/yyyy"
+								timeZone="America/Sao_Paulo"></f:convertDateTime>
+						</h:outputText>
+					</p:column>
+
+					<p:column style="width:140px;">
+						<f:facet name="header">Número da matrícula</f:facet>
+						<h:outputText value="#{aluno.numeroMatricula}" />
+					</p:column>
+				</p:dataTable>
+
+			</div>
+
+			<div>
+
+			<p:dataTable id="dataTableProfessores"
+				value="#{turmaDetalheController.turma.itensTurmas}" var="itensTurmas"
+				style="padding-top:20px;" rows="5" paginator="true"
+				paginatorPosition="bottom" 
+				rendered="#{not empty turmaDetalheController.turma.itensTurmas}"
+				emptyMessage="Sua consulta não retornou registros.">
+
+				<f:facet name="header">
+            		Professores        			
+            	</f:facet>
+
+				<p:column style="width:200px;">
+					<f:facet name="header">Nome</f:facet>
+					<h:outputText value="#{itensTurmas.professor.nomeCompleto}" />
+				</p:column>
+
+				<p:column style="width:150px;">
+					<f:facet name="header">CPF</f:facet>
+					<h:outputText value="#{itensTurmas.professor.cpf}" />
+				</p:column>
+
+				<p:column style="width:110px;">
+					<f:facet name="header">Sexo</f:facet>
+					<h:outputText value="#{itensTurmas.professor.sexo.descricao}" />
+				</p:column>
+				
+			</p:dataTable> 
+
+			</div>
+
+		</o:form>
+
+	</ui:define>
+
+</ui:composition>
+</html>

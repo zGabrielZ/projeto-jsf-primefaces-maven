@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd"
+  version="2.1">
+  
+  <named-native-query name="Aluno.findListarAlunos">
+    <query>
+      	<![CDATA[
+      		select p.id,p.nome_completo as nome, p.cpf, p.data_nascimento as data, p.sexo, a.numero_matricula as matricula, t.nome_completo as turma from tab_pessoa p join tab_aluno a on a.id = p.id join tab_turma t on t.id = a.turma_id
+				where p.nome_completo like :nome and p.sexo like :sexo and t.nome_completo like :turma
+      	]]>
+    </query>
+  </named-native-query>
+
+
+</entity-mappings>

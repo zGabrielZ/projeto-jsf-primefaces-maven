@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/layout/cadastro/Cadastrar.xhtml" >
+
+	<ui:define name="titulo">
+			<h1>Detalhe do aluno : #{alunoDetalheController.aluno.nomeCompleto}</h1>
+		
+			<div id="btnVoltar" style="margin-bottom:10px; margin-top: 10px;" >
+				<h:form id="frmBtnConsultaAluno">
+					<p:commandButton value="Voltar" ajax="false" actionListener="#{navegacaoController.consultaAluno}" />
+				</h:form>
+			</div>
+		
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h:form id="detalheAlunoForm">
+
+
+			<p:inputText id="codigo" 
+				label="Código" type="hidden"></p:inputText>
+
+			<div align="center">
+				<h:panelGrid columns="2" style="text-align: center">
+					<p:outputLabel for="cpf" value="CPF: " />
+					<h:outputText label="CPF" value="#{alunoDetalheController.aluno.cpf}"
+						id="cpf" size="11" maxlength="14"
+						/>
+
+					<p:outputLabel for="sexo" value="Sexo: " />
+					<h:outputText value="#{alunoDetalheController.aluno.sexo.descricao}"
+						label="Sexo" id="sexo">
+					</h:outputText>
+					
+
+					<p:outputLabel for="data" value="Data de nascimento: " />
+					<h:outputText value="#{alunoDetalheController.aluno.dataNascimento}"
+						label="Data de nascimento" id="data">
+						<f:convertDateTime pattern="dd 'de' MMMM 'de' yyyy" ></f:convertDateTime>
+					</h:outputText>
+
+					<p:outputLabel for="numero" value="Número de matrícula: " />
+					<h:outputText value="#{alunoDetalheController.aluno.numeroMatricula}"
+						label="Número da matrícula" id="numero">
+					</h:outputText>
+
+					<p:outputLabel for="turma" value="Turma: "></p:outputLabel>
+					<h:outputText value="#{alunoDetalheController.aluno.turma.nomeTurma}"
+						label="Turma" id="turma">
+					</h:outputText>
+					
+					<p:outputLabel for="turno" value="Turno: "></p:outputLabel>
+					<h:outputText value="#{alunoDetalheController.aluno.turma.turno.descricao}"
+						label="Turno" id="turno">
+					</h:outputText>
+										
+
+				</h:panelGrid>
+			</div>
+
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
+</html>

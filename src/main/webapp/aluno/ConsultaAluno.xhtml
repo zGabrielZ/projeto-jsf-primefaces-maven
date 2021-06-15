@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/layout/consulta/Consulta.xhtml" >
+	
+	<f:metadata>
+		<f:viewAction action="#{alunoController.consultar}"></f:viewAction>
+	</f:metadata>
+
+	<ui:define name="titulo">
+			<h1>Consulta de alunos cadastrados</h1>
+		</ui:define>
+		
+		<ui:define name="consulta">
+			<p:panelGrid>
+				<h:form id="frmConsulta" >
+					
+					<h:panelGrid columns="6" >
+						<p:outputLabel for="nome" value="Nome:" />
+						<p:inputText  id="nome" value="#{alunoController.alunoSearchParam.nomeCompleto}" ></p:inputText>
+
+						<p:outputLabel style="margin-left:25px;" for="cpf" value="CPF:" />
+						<p:inputMask style="margin-left:-151px;" value="#{alunoController.alunoSearchParam.cpf}"
+							id="cpf" mask="999.999.999-99" size="10"
+							maxlength="14" />
+							
+						<p:outputLabel style="margin-left:10px;" for="sexo" value="Sexo:" />
+						<p:selectOneMenu style="margin-left:20px;" value="#{alunoController.alunoSearchParam.sexo}"
+							id="sexo">
+							<f:selectItem itemLabel="Selecione" />
+							<f:selectItems value="#{alunoController.sexo}" var="sexo"
+								itemLabel="#{sexo.descricao}" itemValue="#{sexo}" />
+						</p:selectOneMenu>
+						
+						<p:outputLabel style="margin-left:110px;"  for="numero" value="Número de matrícula:" />
+						<p:inputText style="margin-left:1px;"  maxlength="11" id="numero" value="#{alunoController.alunoSearchParam.numeroMatricula}" />
+					
+						<p:outputLabel style="margin-left:40px;" for="turma" value="Turma:" />
+						<p:selectOneMenu style="margin-left:30px;"  id="turma" value="#{alunoController.alunoSearchParam.turma}" label="Turma"
+							converter="#{turmaConverter}" >
+							<f:selectItem itemLabel="Selecione" />
+							<f:selectItems value="#{turmaController.turmasConsultaAlunos}" var="turma" itemLabel="#{turma.nomeTurma}" 
+								itemValue="#{turma}"/>
+						</p:selectOneMenu>
+						
+						<p:outputLabel/>
+						<p:commandButton id="consultar" value="Consultar" ajax="false" 
+							process="@form" action="#{alunoController.consultar}" />
+						
+						
+					</h:panelGrid>
+				</h:form>
+			</p:panelGrid>
+		</ui:define>
+		
+		<ui:define name="conteudo" >
+			<h:form id="consultaAlunosForm" >
+			<p:messages id="msg" autoUpdate="true"  />
+			<p:dataTable id="dataTableAlunos" value="#{alunoController.alunos}" lazy="true"
+				var="aluno" style="padding-top:20px;" rows="5" paginator="true" paginatorPosition="bottom"
+					emptyMessage="Sua consulta não retornou registros." rowsPerPageTemplate="5, 10, 25, 50, 100" paginatorAlwaysVisible="false" >
+				
+				<p:inputText id="codigo" value="#{alunoController.aluno.id}" label="Código" type="hidden" />
+				
+				<p:column style="width:150px;" >
+					<f:facet name="header">Nome</f:facet>
+					<h:outputText value="#{aluno.nomeCompleto}"/>
+				</p:column>
+
+				<p:column style="width:130px;" >
+					<f:facet name="header">CPF</f:facet>
+					<h:outputText value="#{aluno.cpf}" />
+				</p:column>
+
+				<p:column style="width:110px;" >
+					<f:facet name="header">Sexo</f:facet>
+					<h:outputText value="#{aluno.sexo.descricao}" />
+				</p:column>
+
+				<p:column style="width:150px;">
+					<f:facet name="header">Data de nascimento</f:facet>
+					<h:outputText value="#{aluno.dataNascimento}" >
+						<f:convertDateTime pattern="dd 'de' MMMM 'de' yyyy" timeZone="America/Sao_Paulo" ></f:convertDateTime>
+					</h:outputText>
+				</p:column>
+							
+				<p:column style="width:100px;">
+					<f:facet name="header">Telefone</f:facet>
+					<p:commandButton title="Adicionar Telefone" icon="fa fa-phone"
+						process="@this" action="#{alunoController.selecionarTelefone(aluno)}" >
+					</p:commandButton>
+					<p:commandButton title="Consultar Telefones" action="#{alunoController.selecionarConsultaTelefone(aluno)}" icon="fa fa-search-plus" ></p:commandButton>
+				</p:column>
+				
+				<p:column style="width:60px;" >
+					<f:facet name="header">Detalhe</f:facet>
+					<p:commandButton title="Detalhe do aluno" icon="fa fa-search" 
+						process="@this" action="#{alunoController.selecionarAluno(aluno)}"></p:commandButton>
+				</p:column>
+				
+				<p:column style="width:100px;" >
+					<f:facet name="header">Editar</f:facet>
+					<p:commandButton icon="fa fa-pencil"
+						action="#{alunoController.editarAluno(aluno)}"
+						update="dataTableAlunos" process="@this" title="Editar este aluno" >
+					</p:commandButton> 
+				</p:column>
+
+				<p:column style="width:60px;" >
+					<f:facet name="header">Deletar</f:facet>										
+					<p:commandButton onclick="PF('meuDialogo').show();"
+						icon="fa fa-trash" title="Excluir este aluno" >
+						<f:setPropertyActionListener value="#{aluno}"
+							target="#{alunoController.alunoSelecionado}"></f:setPropertyActionListener>
+					</p:commandButton> 
+				</p:column>
+
+			</p:dataTable>
+			
+			<p:confirmDialog header="Exclusão de alunos"
+				message="Tem certeza que deseja excluir este aluno ?"
+				widgetVar="meuDialogo" resizable="false" modal="true"
+				minimizable="true" maximizable="true">
+
+				<p:commandButton value="Sim"
+					action="#{alunoController.excluirAluno}"
+					update="dataTableAlunos" ajax="false" process="@form"
+					onclick="meuDialogo.hide()" />
+				<p:commandButton value="Nao" update="dataTableAlunos"
+					ajax="false" process="@form" onclick="meuDialogo.hide()" />
+
+			</p:confirmDialog>
+
+		</h:form>
+		
+		</ui:define> 
+		
+		<ui:define name="conteudo-2">
+			<h:form id="btnCadastro" >
+				<div id="btnCadastroAluno" style="margin-top: 30px;" >
+					<p:commandButton value="Ir para o cadastro do aluno" ajax="false" actionListener="#{navegacaoController.cadastroAluno}"  />
+				</div>
+				<div id="btnLimparPesquisa" style="margin-top: 10px;" >
+					<p:commandButton value="Limpar pesquisa" ajax="false" actionListener="#{alunoController.limparPesquisa}"  />
+				</div>	
+			</h:form>
+		</ui:define>
+		
+	</ui:composition>
+</html>

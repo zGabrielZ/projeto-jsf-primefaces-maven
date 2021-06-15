@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:o="http://omnifaces.org/ui">
+	
+	<ui:composition template="/layout/cadastro/Cadastrar.xhtml" >
+
+		<ui:define name="titulo">
+			<h1>Cadastro de turma</h1>
+		
+			<div id="btnVoltar" style="margin-bottom:10px; margin-top: 10px;" >
+				<h:form id="frmBtnConsultaTurma">
+					<p:commandButton value="Ir para consulta de turmas" ajax="false" actionListener="#{navegacaoController.consultaTurma}" />
+				</h:form>
+			</div>
+		
+		</ui:define>
+		
+		<ui:define name="conteudo" >
+		<h:form id="cadastroTurmasForm">
+		
+			<p:messages id="msg" autoUpdate="true"/>
+			
+			<p:inputText id="codigo" value="#{turmaController.turma.id}" label="Código" type="hidden"></p:inputText>
+
+			<div align="center">
+				<h:panelGrid columns="3" style="text-align: center">
+					<p:outputLabel for="nome" value="Nome: " />
+					<p:inputText value="#{turmaController.turma.nomeTurma}"
+						 label="Nome" id="nome">
+					</p:inputText>
+					<p:message for="nome" />
+
+					<p:outputLabel for="numero" value="Número: " />
+					<p:inputText value="#{turmaController.turma.numeroTurma}"
+						label="Número" id="numero"  validator="#{verificarNumeroTurmaValidator.validate}" maxlength="5" />
+					<p:message for="numero" />
+
+					<p:outputLabel for="turno" value="Turno: " />
+					<p:selectOneMenu id="turno" label="Turno"
+						value="#{turmaController.turma.turno}">
+						<f:selectItem itemLabel="Selecione" />
+						<f:selectItems value="#{turmaController.turno}" var="turno"
+							itemLabel="#{turno.descricao}" itemValue="#{turno}" />
+					</p:selectOneMenu>
+					<p:message for="turno" />
+
+					<p:outputLabel for="vaga" value="Vaga: "  />
+					<p:inputText converter="javax.faces.Integer"
+						value="#{turmaController.turma.vagas}" 
+						label="Vagas" id="vaga" >	
+					</p:inputText>
+					<p:message for="vaga" />
+
+				</h:panelGrid>
+			</div>
+
+			<div align="center" style="padding-top:10px;" >
+					<p:commandButton value="Cadastrar Turma" action="#{turmaController.cadastrar}"
+						ajax="false" process="@form"></p:commandButton>
+			</div>
+			
+			<div align="center" style="padding-top:10px;" >
+				<p:commandButton value="Limpar formulário" immediate="true" action="#{turmaController.limparFormulario}"
+					ajax="false" process="@this" >	
+				</p:commandButton>
+			</div>
+
+		</h:form>
+
+	</ui:define>
+	
+	</ui:composition>
+</html>

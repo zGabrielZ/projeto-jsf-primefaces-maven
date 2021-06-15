@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/layout/consulta/Consulta.xhtml" >
+	
+	<f:metadata>
+		<f:viewAction action="#{professorController.consultar}"></f:viewAction>
+	</f:metadata>
+
+	<ui:define name="titulo">
+			<h1>Consulta de professores cadastrados</h1>
+		</ui:define>
+		
+		<ui:define name="consulta">
+			<p:panelGrid>
+				<h:form id="frmConsulta" >
+					
+					<h:panelGrid columns="10" >
+						<p:outputLabel for="nome" style="margin-left:10px;" value="Nome:" />
+						<p:inputText  id="nome" value="#{professorController.professorSearchParam.nomeCompleto}" ></p:inputText>
+
+						<p:outputLabel style="margin-left:25px;" for="cpf" value="CPF:" />
+						<p:inputMask style="margin-left:10px;" value="#{professorController.professorSearchParam.cpf}"
+							id="cpf" mask="999.999.999-99"
+							maxlength="14" size="10" />
+							
+						<p:outputLabel style="margin-left:25px;" for="sexo" value="Sexo:" />
+						<p:selectOneMenu style="margin-left:10px;" value="#{professorController.professorSearchParam.sexo}"
+							id="sexo">
+							<f:selectItem itemLabel="Selecione" />
+							<f:selectItems value="#{professorController.sexo}" var="sexo"
+								itemLabel="#{sexo.descricao}" itemValue="#{sexo}" />
+						</p:selectOneMenu>	
+						
+						<p:outputLabel style="margin-left:25px;" for="graduacao" value="Graduação:" />
+						<p:inputText style="margin-left:10px;"  id="graduacao" value="#{professorController.professorSearchParam.nomeGraduacao}" />
+							
+						<p:outputLabel/>
+						<p:commandButton id="consultar" value="Consultar" ajax="false" 
+							process="@form" action="#{professorController.consultar}" />		
+						
+					</h:panelGrid>
+				</h:form>
+			</p:panelGrid>
+		</ui:define>
+		
+		<ui:define name="conteudo" >
+			<h:form id="consultaProfessoresForm" >
+			<p:messages id="msg" autoUpdate="true"  />
+			<p:dataTable id="dataTableProfessores" value="#{professorController.professores}" 
+				var="professor" style="padding-top:20px;" rows="5" paginator="true" paginatorPosition="bottom"
+					emptyMessage="Sua consulta não retornou registros." >
+				
+				<p:inputText id="codigo" value="#{professorController.professor.id}" label="Código" type="hidden" />
+				
+				<p:column style="width:150px;" >
+					<f:facet name="header">Nome</f:facet>
+					<h:outputText value="#{professor.nomeCompleto}"/>
+				</p:column>
+
+				<p:column style="width:130px;" >
+					<f:facet name="header">CPF</f:facet>
+					<h:outputText value="#{professor.cpf}" />
+				</p:column>
+
+				<p:column style="width:100px;" >
+					<f:facet name="header">Sexo</f:facet>
+					<h:outputText value="#{professor.sexo.descricao}" />
+				</p:column>
+
+				<p:column style="width:120px;">
+					<f:facet name="header">Data de nascimento</f:facet>
+					<h:outputText value="#{professor.dataNascimento}" >
+						<f:convertDateTime pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo" ></f:convertDateTime>
+					</h:outputText>
+				</p:column>
+							
+				<p:column style="width:70px;" >
+					<f:facet name="header">Editar</f:facet>
+					<p:commandButton icon="fa fa-pencil"
+						action="#{professorController.editarProfessor(professor)}"
+						update="dataTableProfessores" process="@this" title="Editar este professor" >
+					</p:commandButton> 
+				</p:column>
+				
+				<p:column style="width:90px;">
+					<f:facet name="header">Telefone</f:facet>
+					<p:commandButton title="Adicionar Telefone" icon="fa fa-phone"
+						process="@this" action="#{professorController.selecionarTelefone(professor)}" >
+					</p:commandButton>
+					<p:commandButton title="Consultar Telefones" action="#{professorController.selecionarConsultaTelefone(professor)}" icon="fa fa-search-plus" ></p:commandButton>
+				</p:column>
+				
+				<p:column style="width:60px;" >
+					<f:facet name="header">Detalhe</f:facet>
+					<p:commandButton title="Detalhe do professor" icon="fa fa-search" 
+						process="@this" action="#{professorController.selecionarProfessor(professor)}"></p:commandButton>
+				</p:column>
+				
+				<p:column style="width:60px;" >
+					<f:facet name="header">Deletar</f:facet>										
+					<p:commandButton onclick="PF('meuDialogo').show();"
+						icon="fa fa-trash" title="Excluir este professor" >
+						<f:setPropertyActionListener value="#{professor}"
+							target="#{professorController.professorSelecionado}"></f:setPropertyActionListener>
+					</p:commandButton> 
+				</p:column>
+				
+				
+
+			</p:dataTable>
+			
+			
+			<p:confirmDialog header="Exclusão de professores"
+				message="Tem certeza que deseja excluir este professor ?"
+				widgetVar="meuDialogo" resizable="false" modal="true"
+				minimizable="true" maximizable="true">
+
+				<p:commandButton value="Sim"
+					action="#{professorController.excluirProfessor}"
+					update="dataTableProfessores" ajax="false" process="@form"
+					onclick="meuDialogo.hide()" />
+				<p:commandButton value="Nao" update="dataTableProfessores"
+					ajax="false" process="@form" onclick="meuDialogo.hide()" />
+
+			</p:confirmDialog>
+			
+
+		</h:form>
+		
+		</ui:define> 
+		
+		<ui:define name="conteudo-2">
+			<h:form id="btnCadastro" >
+				<div id="btnCadastroProfessor" style="margin-top: 30px;" >
+					<p:commandButton value="Ir para o cadastro do professor" ajax="false" actionListener="#{navegacaoController.cadastroProfessor}"  />
+				</div>	
+				
+				<div id="btnLimparPesquisa" style="margin-top: 20px;">
+					<p:commandButton id="limpar" value="Limpar pesquisa" ajax="false" 
+							process="@form" action="#{professorController.limparPesquisa}" />	
+				</div>
+			</h:form>
+		</ui:define>
+		
+	</ui:composition>
+</html>

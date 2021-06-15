@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/layout/consulta/Consulta.xhtml" >
+
+	<ui:define name="titulo">
+			<h1>Gerar relatório para turmas cadastradas</h1>
+		</ui:define>
+		
+		<ui:define name="consulta">
+			<p:panelGrid>
+				<h:form id="frmConsulta" >
+				
+					<p:messages id="msg" autoUpdate="true"/>
+				
+					<p:outputLabel  for="nome" value="Nome:" />
+					<p:inputText style="margin-left:10px;" id="nome" value="#{gerarRelatorioController.turmaRelatorio.nome}" ></p:inputText>
+
+					<p:outputLabel style="margin-left:10px;" for="turno" value="Turno:" />
+					<p:selectOneMenu style="margin-left:10px; position: relative; top: 7px; " id="turno" value="#{gerarRelatorioController.turmaRelatorio.turno}"  >
+						<f:selectItem itemLabel="Selecione" />
+						<f:selectItems value="#{gerarRelatorioController.turnos}" var="turno"
+							itemLabel="#{turno.descricao}" itemValue="#{turno}" />
+					</p:selectOneMenu>
+
+					<p:commandLink style="margin-left:10px;text-decoration:none;" id="gerar" value="Gerar Relatório" ajax="false" 
+						action="#{gerarRelatorioController.gerarRelatorioTurma}" process="@form" update="@form"
+						target="_blank" />
+				</h:form>
+			</p:panelGrid>
+		</ui:define>
+		
+	</ui:composition>
+</html>

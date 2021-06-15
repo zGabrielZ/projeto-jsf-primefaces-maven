@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.16.0.final using JasperReports Library version 6.16.0-48579d909b7943b64690c65c71e07e0b80981928  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RelatorioProfessor" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fbbfb9f1-b05d-448b-9e93-fde2389f6637">
+	<parameter name="nomeParam" class="java.lang.String"/>
+	<parameter name="graduacaoParam" class="java.lang.String"/>
+	<parameter name="sexoParam" class="java.lang.String"/>
+	<parameter name="criador" class="java.lang.String"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting = "false"/>
+	<queryString language="SQL">
+	</queryString>
+	<field name="cpf" class="java.lang.String">
+	</field>
+	<field name="data" class="java.util.Date">
+	</field>
+	<field name="nome" class="java.lang.String">
+	</field>
+	<field name="sexo" class="java.lang.String">
+	</field>
+	<field name="nomeGraduacao" class="java.lang.String">
+	</field>
+	<field name="dataFormacao" class="java.util.Date">
+	</field>
+	<field name="anoAdmissao" class="java.util.Date">
+	</field>
+	<field name="qtdHoras" class="java.lang.Integer">
+	</field>
+	<field name="tipoPerfil" class="java.lang.String">
+	</field>
+	<field name="telefones" class="java.util.List">
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="200" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<staticText>
+				<reportElement x="80" y="0" width="400" height="40" uuid="8aae5ab5-d1f0-4820-bccd-6e3c80d95aa7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Relatório de professores cadastrados]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="180" y="90" width="300" height="20" uuid="33338b35-541f-4263-8ee3-023ad1da5f7d"/>
+				<textFieldExpression><![CDATA[$P{nomeParam}.equals("") ? "Nome não informado" : $P{nomeParam}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="120" width="300" height="20" uuid="ea3fcc24-adf9-467b-a0ad-6e328f977a94">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$P{sexoParam}.equals("") ? "Sexo não informado" : $P{sexoParam}.equals("MASCULINO") ? "Masculino" : $P{sexoParam}.equals("FEMININO") ? "Feminino" : null]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="180" y="50" width="200" height="20" uuid="56c96daa-c1bc-4a5b-8967-2ecb1a05ba9a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Parâmetros pesquisados abaixo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="90" width="100" height="20" uuid="a5ec5cd2-e257-4d30-9456-d421e6b8d3c8"/>
+				<textElement textAlignment="Center" verticalAlignment="Top"/>
+				<text><![CDATA[Nome :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="120" width="100" height="20" uuid="de2413f9-5749-4a92-9e83-848e2fbe1ce3"/>
+				<textElement textAlignment="Center" verticalAlignment="Top"/>
+				<text><![CDATA[Sexo :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="150" width="100" height="20" uuid="1c610885-dffb-4614-a50a-c5d09e06c7ab">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top"/>
+				<text><![CDATA[Graduação :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="180" y="150" width="300" height="20" uuid="48122e6b-acba-4abd-acce-c0634be0d181"/>
+				<textFieldExpression><![CDATA[$P{graduacaoParam}.equals("") ? "Graduação não informada" : $P{graduacaoParam}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="191" splitType="Stretch">
+			<textField>
+				<reportElement x="100" y="0" width="180" height="20" uuid="e93fb562-7b8c-4e4e-b9e5-d5854a2b457e"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{cpf}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="c76dcfe6-161f-41b1-bad0-856589a0e24f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[CPF]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="380" y="0" width="170" height="20" uuid="b31b3a0e-e981-47da-bb78-d545c2334bb4">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{data}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="280" y="0" width="100" height="20" uuid="6dd12c06-f10c-46b8-a8f8-299fcd078cb1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Nascimento]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="120" y="20" width="430" height="20" uuid="f323edaa-8727-4af6-8bbe-fa79965a1778">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nome}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="120" height="20" uuid="e90dd4d9-cf03-4b34-b257-57cbba188f08">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Nome completo]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="40" width="180" height="20" uuid="688b3a1c-13c2-480e-8f28-b934b883ba7f">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{sexo}.equals("MASCULINO") ? "Masculino" : $F{sexo}.equals("FEMININO") ? "Feminino" : null]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="40" width="100" height="20" uuid="b46f276d-9df4-4885-84bc-82b5a2e61851">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Sexo]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="110" y="60" width="320" height="20" uuid="a5a2f78c-b536-484d-9a22-c4a58316a604">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nomeGraduacao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="60" width="110" height="20" uuid="a98bc2a0-0a41-4336-8115-1a483bd53be3">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Graduação]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="80" width="180" height="20" uuid="d1d1ee90-a3a2-4cd5-8c5f-edf6d73829f9"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{dataFormacao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="80" width="100" height="20" uuid="ffe4fb8a-6463-4181-b5b6-1849791391f1">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Formação]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="380" y="80" width="170" height="20" uuid="8210167e-e40b-4966-8f59-5ddfafd7350c"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{anoAdmissao}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="280" y="80" width="100" height="20" uuid="92f61a2b-5c9e-42f9-8851-08d889e6df4a"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Admissão]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="100" width="120" height="20" uuid="4fd74935-5535-4ad6-871e-846edaea40b6">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{qtdHoras}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="100" width="100" height="20" uuid="f6ce25b0-9668-432f-9c6a-4de61451c62a">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Horas]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="320" y="100" width="230" height="20" uuid="b648f1b5-1937-43cd-8e59-63a8df7acde9"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{tipoPerfil}.equals("ESTAGIARIO") ? "Estagiário" :  $F{tipoPerfil}.equals("JUNIOR") ? "Júnior" : $F{tipoPerfil}.equals("PLENO") 
+? "Pleno" : $F{tipoPerfil}.equals("SENIOR") ? "Sênior" : $F{tipoPerfil}.equals("CONSULTOR") ? "Consultor" : null]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="220" y="100" width="100" height="20" uuid="c8c7c8a9-2a45-41cd-a4dc-04450d0e4a40"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Tipo de perfil]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="0" y="120" width="555" height="70" uuid="b2aa5037-d506-46e1-8709-4c4152623f00">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<dataSourceExpression>
+          		  new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource
+                  ($F{telefones})
+            	</dataSourceExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<summary>
+		<band height="50" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="333" y="20" width="222" height="20" uuid="affcea7e-6326-44c6-bb5b-853de561f2fa">
+					<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Criado por " + $P{criador}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

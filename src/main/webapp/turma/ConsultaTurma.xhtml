@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/layout/consulta/Consulta.xhtml" >
+	
+	<f:metadata>
+		<f:viewAction action="#{turmaController.consultar}"></f:viewAction>
+	</f:metadata>
+
+	<ui:define name="titulo">
+			<h1>Consulta de turmas cadastradas</h1>
+		</ui:define>
+		
+		<ui:define name="consulta">
+			<p:panelGrid>
+				<h:form id="frmConsulta" >
+					<p:outputLabel  for="nome" value="Nome:" />
+					<p:inputText style="margin-left:10px;" id="nome" value="#{turmaController.turmaSearchParam.nome}" ></p:inputText>
+
+					<p:outputLabel style="margin-left:10px;" for="numero" value="Número:" />
+					<p:inputText style="margin-left:10px;" id="numero" value="#{turmaController.turmaSearchParam.numero}" ></p:inputText>
+
+					<p:outputLabel style="margin-left:10px;" for="turno" value="Turno:" />
+					<p:selectOneMenu style="margin-left:10px; position: relative; top: 7px; " id="turno" value="#{turmaController.turmaSearchParam.turno}"  >
+						<f:selectItem itemLabel="Selecione" />
+						<f:selectItems value="#{turmaController.turno}" var="turno"
+							itemLabel="#{turno.descricao}" itemValue="#{turno}" />
+					</p:selectOneMenu>
+
+					<p:commandButton style="margin-left:10px;" id="consultar" value="Consultar" ajax="false" 
+						action="#{turmaController.consultar}" process="@form" update="dataTableTurmas" ></p:commandButton>
+				</h:form>
+			</p:panelGrid>
+		</ui:define>
+		
+		<ui:define name="conteudo" >
+			<h:form id="consultaTurmasForm" >
+			<p:messages id="msg" autoUpdate="true"  />
+			<p:dataTable id="dataTableTurmas" value="#{turmaController.turmas}" 
+				var="turma" style="padding-top:20px;" rows="5" paginator="true" paginatorPosition="bottom"  
+					emptyMessage="Sua consulta não retornou registros." rowsPerPageTemplate="5, 10, 25, 50, 100" paginatorAlwaysVisible="false">
+				
+				<p:inputText id="codigo" value="#{turmaController.turma.id}" label="Código" type="hidden" />
+				
+				<p:column style="width:220px;" >
+					<f:facet name="header">Nome</f:facet>
+					<h:outputText value="#{turma.nome}" />
+				</p:column>
+
+				<p:column style="width:60px;" >
+					<f:facet name="header">Número</f:facet>
+					<h:outputText value="#{turma.numero}" />
+				</p:column>
+
+				<p:column style="width:100px;" >
+					<f:facet name="header">Turno</f:facet>
+					<h:outputText value="#{turma.turno}" />
+				</p:column>
+
+				<p:column style="width:100px;" >
+					<f:facet name="header">Vagas</f:facet>
+					<h:outputText value="#{turma.vagas}" />
+				</p:column>
+				
+				<p:column style="width:60px;" >
+					<f:facet name="header">Detalhe</f:facet>
+					<p:commandButton title="Detalhe da turma" icon="fa fa-search"  
+						process="@this" action="#{turmaController.selecionarTurma(turma)}"></p:commandButton>
+				</p:column>
+				
+				<p:column style="width:100px;" >
+					<f:facet name="header">Editar</f:facet>
+					<p:commandButton icon="fa fa-pencil"
+						action="#{turmaController.editarTurma(turma)}" 
+						update="dataTableTurmas" process="@this" title="Editar esta turma" >
+					</p:commandButton> 
+				</p:column>
+				
+				<p:column style="width:60px;" >
+					<f:facet name="header">Deletar</f:facet>										
+					<p:commandButton onclick="PF('meuDialogo').show();"
+						icon="fa fa-trash" title="Excluir esta turma" >
+						<f:setPropertyActionListener value="#{turma}"
+							target="#{turmaController.turmaSelecionado}"></f:setPropertyActionListener>
+					</p:commandButton> 
+				</p:column>
+
+			</p:dataTable>
+			
+			<p:confirmDialog header="Exclusão de turmas"
+				message="Tem certeza que deseja excluir esta turma ?"
+				widgetVar="meuDialogo" resizable="false" modal="true"
+				minimizable="true" maximizable="true">
+
+				<p:commandButton value="Sim"
+					action="#{turmaController.excluirTurma}"
+					update="dataTableTurmas" ajax="false" process="@form"
+					onclick="meuDialogo.hide()" />
+				<p:commandButton value="Nao" update="dataTableTurmas"
+					ajax="false" process="@form" onclick="meuDialogo.hide()" />
+
+			</p:confirmDialog>
+
+		</h:form>
+		
+		
+		
+		</ui:define>
+		
+		<ui:define name="conteudo-2">
+			<h:form id="btnCadastroTurma" >
+				<div id="btnCadastroTurma" style="margin-top: 30px;" >
+					<p:commandButton value="Ir para o cadastro da turma" ajax="false" actionListener="#{navegacaoController.cadastroTurma}"  />
+				</div>
+				<div id="btnLimparTurma" style="margin-top: 10px;" >
+					<p:commandButton value="Limpar pesquisa" ajax="false" actionListener="#{turmaController.limparCamposPesquisa}"  />
+				</div>
+			</h:form>
+		</ui:define>
+		
+	</ui:composition>
+</html>

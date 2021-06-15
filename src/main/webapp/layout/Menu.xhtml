@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+<h:head>
+  <title>Minha aplicação</title>
+</h:head>
+
+<body>
+
+	<div class="card">
+		<h:form>
+			<p:growl id="messages" />
+
+			<p:menubar>
+
+				<p:menuitem label="Home" icon="fa fa-home" title="Home" action="#{navegacaoController.home}" >
+				</p:menuitem>
+
+				<p:submenu label="Turma" icon="fa fa-pencil">
+					<p:submenu label="Novo" icon="fa fa-pencil">
+						<p:menuitem value="Consulta"
+							action="#{navegacaoController.consultaTurma}" />
+						<p:menuitem value="Cadastro"
+							action="#{navegacaoController.cadastroTurma}" />
+					</p:submenu>
+					<p:menuitem value="Gerar relatório" action="#{navegacaoController.gerarRelatorioTurma}" />
+				</p:submenu>
+
+				<p:submenu label="Usuários" icon="fa fa-users">
+					<p:submenu label="Aluno" icon="fa fa-user-plus">
+						<p:menuitem value="Consulta"
+							action="#{navegacaoController.consultaAluno}" />
+						<p:menuitem value="Cadastro"
+							action="#{navegacaoController.cadastroAluno}" />
+						<p:menuitem value="Gerar relatório" action="#{navegacaoController.gerarRelatorioAluno}" />
+					</p:submenu>
+					<p:submenu label="Professor" icon="fa fa-user-plus">
+						<p:menuitem value="Consulta" action="#{navegacaoController.consultaProfessor}"/>
+						<p:menuitem value="Cadastro" action="#{navegacaoController.cadastroProfessor}" />
+						<p:menuitem value="Gerar relatório" action="#{navegacaoController.gerarRelatorioProfessor}" />
+					</p:submenu>
+				</p:submenu>
+		
+				<p:submenu label="Eventos" icon="fa fa-book">
+					<p:menuitem value="Adicionar professores na turmas" action="#{navegacaoController.adicionarEvento}" />
+				</p:submenu>
+			
+			</p:menubar>
+		</h:form>
+	</div>
+
+
+</body>
+
+</html>

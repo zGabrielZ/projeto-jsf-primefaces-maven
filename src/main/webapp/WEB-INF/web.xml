@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+  <display-name>Projeto-Escola</display-name>
+  
+   <filter>
+  	<filter-name>TurmaFilter</filter-name>
+  	<filter-class>br.com.gabrielferreira.filter.TurmaFilter</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>TurmaFilter</filter-name>
+  	<url-pattern>/turma/detalhe/*</url-pattern>
+  	<url-pattern>/turma/atualizar/*</url-pattern>
+  </filter-mapping>
+  
+  <welcome-file-list>
+  	<welcome-file>login/LoginUsuario.xhtml</welcome-file>
+  </welcome-file-list>
+  
+  <filter>
+  	<filter-name>AlunoFilter</filter-name>
+  	<filter-class>br.com.gabrielferreira.filter.AlunoFilter</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>AlunoFilter</filter-name>
+  	<url-pattern>/aluno/detalhe/*</url-pattern>
+  	<url-pattern>/aluno/atualizar/*</url-pattern>
+  </filter-mapping>
+  
+  <filter>
+  	<filter-name>TelefoneFilter</filter-name>
+  	<filter-class>br.com.gabrielferreira.filter.TelefoneFilter</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>TelefoneFilter</filter-name>
+  	<url-pattern>/telefone/*</url-pattern>
+  </filter-mapping>
+  
+  <filter>
+  	<filter-name>ProfessorFilter</filter-name>
+  	<filter-class>br.com.gabrielferreira.filter.ProfessorFilter</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>ProfessorFilter</filter-name>
+  	<url-pattern>/professor/detalhe/*</url-pattern>
+  	<url-pattern>/professor/atualizar/*</url-pattern>
+  </filter-mapping>
+  
+  <filter>
+  	<filter-name>UsuarioFilter</filter-name>
+  	<filter-class>br.com.gabrielferreira.filter.UsuarioFilter</filter-class>
+  </filter>
+  <filter-mapping>
+  	<filter-name>UsuarioFilter</filter-name>
+  	<url-pattern>/*</url-pattern>
+  </filter-mapping>
+  
+      
+  <context-param>
+    <param-name>primefaces.FONT_AWESOME</param-name>
+    <param-value>true</param-value>
+  </context-param>
+  <context-param>
+  	<param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+    <param-value>true</param-value>
+  </context-param>
+  <servlet>
+    <servlet-name>Faces Servlet</servlet-name>
+    <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Faces Servlet</servlet-name>
+    <url-pattern>*.xhtml</url-pattern>
+  </servlet-mapping>
+  <filter>
+    <filter-name>Encoding Filter</filter-name>
+    <filter-class>org.apache.catalina.filters.SetCharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>utf-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>Encoding Filter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+</web-app>

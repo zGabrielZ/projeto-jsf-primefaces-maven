@@ -1,0 +1,82 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+	
+	<f:metadata>
+		<f:viewParam id="codigo" name="codigo" value="#{alunoController.aluno.id}"/>
+		<f:event listener="#{alunoController.carregar}" type="preRenderView"></f:event>
+	</f:metadata>
+
+<ui:composition template="/layout/cadastro/Cadastrar.xhtml">
+
+	<ui:define name="titulo">
+		<h1>Atualizar aluno</h1>
+
+		<div id="btnVoltar" style="margin-bottom: 10px; margin-top: 10px;">
+			<h:form id="frmBtnConsultaAluno">
+				<p:commandButton value="Ir para consulta de alunos" ajax="false"
+					actionListener="#{navegacaoController.consultaAluno}" />
+			</h:form>
+		</div>
+
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<o:form id="atualizarAlunoForm" includeRequestParams="true"
+			acceptcharset="ISO-8859-1">
+
+			<p:messages id="msg" autoUpdate="true" />
+
+			<p:inputText id="codigo" value="#{alunoController.aluno.id}"
+				label="Código" type="hidden"></p:inputText>
+
+			<div align="center">
+				<h:panelGrid columns="2" style="text-align: center">
+					<p:outputLabel for="nome" value="Nome: " />
+					<p:inputText value="#{alunoController.aluno.nomeCompleto}"
+						label="Nome" id="nome">
+					</p:inputText>
+
+					<p:outputLabel for="sexo" value="Sexo: " />
+					<p:selectOneMenu id="sexo" label="Sexo"
+						value="#{alunoController.aluno.sexo}">
+						<f:selectItem itemLabel="Selecione" />
+						<f:selectItems value="#{alunoController.sexo}" var="sexo"
+							itemLabel="#{sexo.descricao}" itemValue="#{sexo}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel for="numero" value="Número de matrícula: " />
+					<p:inputText value="#{alunoController.aluno.numeroMatricula}"
+						maxlength="11" label="Número de matrícula" id="numero">
+					</p:inputText>
+
+					<p:outputLabel for="turma" value="Turma: "></p:outputLabel>
+					<p:selectOneMenu id="turma" value="#{alunoController.aluno.turma}"
+						label="Turma" converter="#{turmaConverter}" required="true"
+						requiredMessage="É necessário informar a turma para completa o cadastro.">
+						<f:selectItem itemLabel="Selecione" />
+						<f:selectItems value="#{turmaController.turmasConsultaAlunos}"
+							var="turma"
+							itemLabel="#{turma.nomeTurma}, #{turma.turno.descricao}"
+							itemValue="#{turma}" />
+					</p:selectOneMenu>
+
+				</h:panelGrid>
+			</div>
+
+			<div align="center" style="padding-top: 10px;">
+				<p:commandButton value="Atualizar Aluno"
+					action="#{alunoController.cadastrar}" ajax="false" process="@form"></p:commandButton>
+			</div>
+
+		</o:form>
+
+	</ui:define>
+
+</ui:composition>
+</html>

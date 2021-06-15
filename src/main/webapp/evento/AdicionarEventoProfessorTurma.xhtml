@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/layout/cadastro/Cadastrar.xhtml">
+
+	<ui:define name="titulo">
+		<h1>Adicionar Evento</h1>
+
+		<h:form id="adicionarEventoForm">
+
+			<p:inputText id="codigo" 
+				label="Código" type="hidden"></p:inputText>
+
+			<div align="center">
+				<h:panelGrid columns="3" style="text-align: center">
+					<p:outputLabel for="professor" value="Professor: "></p:outputLabel>
+					<p:selectOneMenu id="professor" value="#{eventoController.itensTurma.professor}"
+						label="Professor" converter="#{pessoaConverter}" required="true"
+						requiredMessage="É necessário informar o professor para completa o cadastro.">
+						<f:selectItem itemLabel="Selecione" />
+						<f:selectItems value="#{eventoController.professores}"
+							var="professor"
+							itemLabel="#{professor.nomeCompleto}, #{professor.cpf}"
+							itemValue="#{professor}" />
+					</p:selectOneMenu>
+					<p:message for="professor" />
+					
+					<p:outputLabel for="turma" value="Turma: "></p:outputLabel>
+					<p:selectOneMenu id="turma" value="#{eventoController.itensTurma.turma}"
+						label="Turma" converter="#{turmaConverter}" required="true"
+						requiredMessage="É necessário informar a turma para completa o cadastro.">
+						<f:selectItem itemLabel="Selecione" />
+						<f:selectItems value="#{eventoController.turmas}"
+							var="turma"
+							itemLabel="#{turma.nomeTurma}, #{turma.turno.descricao}"
+							itemValue="#{turma}" />
+					</p:selectOneMenu>
+					<p:message for="turma" />
+
+				</h:panelGrid>
+			</div>
+
+			<div align="center" style="padding-top: 10px;">
+				<p:commandButton value="Adicionar evento"
+					action="#{eventoController.cadastrar}" ajax="false" process="@form"></p:commandButton>
+			</div>
+
+		</h:form>
+
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h:form id="dataTableItensTurmas">
+			<p:messages id="msg" autoUpdate="true" />
+			<p:dataTable id="dataTableItensTurmas"
+				value="#{eventoController.itensTurmas}" var="itemTurma"
+				style="padding-top:20px;" rows="5" paginator="true"
+				paginatorPosition="bottom"
+				emptyMessage="Sua consulta não retornou registros."
+				rowsPerPageTemplate="5, 10, 25, 50, 100"
+				paginatorAlwaysVisible="false">
+
+				<p:inputText id="codigo" value="#{eventoController.itensTurma.id}"
+					label="Código" type="hidden" />
+
+				<p:column style="width:220px;">
+					<f:facet name="header">Nome do professor</f:facet>
+					<h:outputText value="#{itemTurma.professor.nomeCompleto}" />
+				</p:column>
+
+				<p:column style="width:130px;">
+					<f:facet name="header">CPF</f:facet>
+					<h:outputText value="#{itemTurma.professor.cpf}" />
+				</p:column>
+
+				<p:column style="width:200px;">
+					<f:facet name="header">Nome da turma</f:facet>
+					<h:outputText value="#{itemTurma.turma.nomeTurma}" />
+				</p:column>
+
+				<p:column style="width:60px;">
+					<f:facet name="header">Número da turma</f:facet>
+					<h:outputText value="#{itemTurma.turma.numeroTurma}" />
+				</p:column>
+
+				<p:column style="width:100px;">
+					<f:facet name="header">Turno da turma</f:facet>
+					<h:outputText value="#{itemTurma.turma.turno.descricao}" />
+				</p:column>
+
+				<p:column style="width:60px;">
+					<f:facet name="header">Deletar</f:facet>
+					<p:commandButton onclick="PF('meuDialogo').show();"
+						icon="fa fa-trash" title="Excluir este evento">
+						<f:setPropertyActionListener value="#{itemTurma}"
+							target="#{eventoController.itensTurmaSelecionado}"></f:setPropertyActionListener>
+					</p:commandButton>
+				</p:column>
+
+			</p:dataTable>
+			
+			<p:confirmDialog header="Exclusão de evento"
+				message="Tem certeza que deseja excluir este evento ?"
+				widgetVar="meuDialogo" resizable="false" modal="true"
+				minimizable="true" maximizable="true">
+
+				<p:commandButton value="Sim"
+					action="#{eventoController.excluirItensTurmas}"
+					update="dataTableItensTurmas" ajax="false" process="@form"
+					onclick="meuDialogo.hide()" />
+				<p:commandButton value="Nao" update="dataTableItensTurmas"
+					ajax="false" process="@form" onclick="meuDialogo.hide()" />
+
+			</p:confirmDialog>
+			
+		</h:form>
+	</ui:define>
+
+</ui:composition>
+</html>

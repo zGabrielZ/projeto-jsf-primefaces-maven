@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd"
+  version="2.1">
+  
+  <named-native-query name="Turma.findListarTurmas">
+    <query>
+      	<![CDATA[
+      		select t.nome_completo as nome, t.numero_turma as numero, t.turno, t.vagas from tab_turma t where nome_completo like :nome AND turno like :turno
+      	]]>
+    </query>
+  </named-native-query>
+
+
+</entity-mappings>

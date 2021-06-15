@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd"
+  version="2.1">
+  
+  <named-native-query name="Professor.findListarProfessores">
+    <query>
+      	<![CDATA[
+      		select p.*, gr.nome_graduacao ,gr.data_formacao, pr.data_admissao, pr.qtdHoras, pr.tipo_perfil from tab_pessoa p 
+				join tab_professor pr on pr.id = p.id join tab_graduacao gr on gr.id = pr.graduacao_id
+    			where p.nome_completo like :nome and p.sexo like :sexo and gr.nome_graduacao like :graduacao
+      	]]>
+    </query>
+  </named-native-query>
+
+
+</entity-mappings>
