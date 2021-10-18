@@ -23,7 +23,6 @@ import br.com.gabrielferreira.search.ProfessorSearch;
 
 import br.com.gabrielferreira.service.ProfessorService;
 import br.com.gabrielferreira.utils.FacesMessages;
-import br.com.gabrielferreira.utils.Transacional;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -47,19 +46,16 @@ public class ProfessorServiceImpl implements Serializable,ProfessorService{
 	@Inject
 	private TelefoneRepositorio telefoneRepositorio;
 
-	@Transacional
 	@Override
 	public void getInserirProfessor(Pessoa pessoa) throws RegraDeNegocioException {
 		pessoaRepositorio.inserir(pessoa);
 	}
 
-	@Transacional
 	@Override
 	public void getAtualizarProfessor(Pessoa pessoa) throws RegraDeNegocioException {
 		pessoaRepositorio.atualizar(pessoa);
 	}
-
-	@Transacional
+	
 	@Override
 	public void getRemoverProfessor(Pessoa pessoa) {
 		pessoaRepositorio.remover(pessoa);

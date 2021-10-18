@@ -3,9 +3,6 @@ import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
-import javax.faces.component.UIViewRoot;
-import javax.faces.component.html.HtmlInputText;
-import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -20,6 +17,8 @@ import lombok.Setter;
 
 @Named
 @ViewScoped
+@Getter
+@Setter
 public class UsuarioController implements Serializable{
 
 	/**
@@ -30,8 +29,6 @@ public class UsuarioController implements Serializable{
 	@Inject
 	private UsuarioServiceImpl usuarioServiceImpl;
 	
-	@Getter
-	@Setter
 	private Usuario usuario;
 	
 	@PostConstruct
@@ -41,18 +38,23 @@ public class UsuarioController implements Serializable{
 	
 	public void cadastrar() {
 		if(usuario.getId() == null) {
-			inserirUsuario(usuario);
-			usuario = new Usuario();
+			inserirUsuario();
+			novo();
 		}	
 	}
 	
-	private void inserirUsuario(Usuario usuario) {
+	public void novo() {
+		usuario = new Usuario();
+	}
+	
+	private void inserirUsuario() {
 		try {
 			String senhaCodificada = transformarSenha(usuario.getSenha());
 			usuario.setSenha(senhaCodificada);
 			usuarioServiceImpl.getInserirUsuario(usuario);
 			FacesMessages.adicionarMensagem("cadastroUsuarioForm:msg", FacesMessage.SEVERITY_INFO, "Cadastrado com sucesso !",
 					null);
+			novo();
 		} catch (RegraDeNegocioException e) {
 			FacesMessages.adicionarMensagem("cadastroUsuarioForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
 					null);
@@ -63,17 +65,5 @@ public class UsuarioController implements Serializable{
 		Base64 base64 = new Base64();
 		String senhaSerializada = base64.encodeAsString(senha.getBytes());
 		return senhaSerializada;
-	}
-	
-	public void limparFormulario() {
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-		UIViewRoot uiViewRoot = facesContext.getViewRoot();
-		HtmlInputText htmlInputTextNome = (HtmlInputText) uiViewRoot.findComponent("cadastroUsuarioForm:nome");
-		HtmlInputText htmlInputTextEmail = (HtmlInputText) uiViewRoot.findComponent("cadastroUsuarioForm:email");
-		HtmlInputText htmlInputTextSenha = (HtmlInputText) uiViewRoot.findComponent("cadastroUsuarioForm:senha");
-		htmlInputTextNome.setSubmittedValue("");
-		htmlInputTextEmail.setSubmittedValue("");
-		htmlInputTextSenha.setSubmittedValue("");
-		usuario = new Usuario();
 	}
 }

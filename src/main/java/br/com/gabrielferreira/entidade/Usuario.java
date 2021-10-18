@@ -14,7 +14,6 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,7 +25,6 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 @ToString
 public class Usuario implements Serializable{
 
@@ -37,7 +35,6 @@ public class Usuario implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@EqualsAndHashCode.Include
 	private Integer id;
 	
 	@NotBlank(message = "Campo do nome não pode ser vazio")
@@ -46,11 +43,38 @@ public class Usuario implements Serializable{
 	private String nomeCompleto;
 	
 	@Email(message= "E-mail inválido")
-	@NotBlank(message = "Campo da turma não pode ser vazia")
+	@NotBlank(message = "Campo do e-mail não pode ser vazia")
 	private String email;
 	
 	@NotBlank(message = "Campo da senha não pode ser vazia")
 	@Size(max = 150,message = "Não pode passa de 150 caracteres")
 	private String senha;
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Usuario other = (Usuario) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+	
+	
 
 }

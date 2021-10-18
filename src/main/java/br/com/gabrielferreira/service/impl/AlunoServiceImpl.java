@@ -23,7 +23,6 @@ import br.com.gabrielferreira.repositorio.TurmaRepositorio;
 import br.com.gabrielferreira.search.AlunoSearch;
 import br.com.gabrielferreira.service.AlunoService;
 import br.com.gabrielferreira.utils.FacesMessages;
-import br.com.gabrielferreira.utils.Transacional;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -50,20 +49,17 @@ public class AlunoServiceImpl implements Serializable,AlunoService{
 	@Inject
 	private TelefoneRepositorio telefoneRepositorio;
 	
-	@Transacional
 	@Override
 	public void getInserirAluno(Pessoa pessoa) throws RegraDeNegocioException {
 		getVerificarAtualizarOuInserir(pessoa);
 		pessoaRepositorio.inserir(pessoa);
 	}
 
-	@Transacional
 	@Override
 	public void getRemoverAluno(Pessoa pessoa) {
 		pessoaRepositorio.remover(pessoa);
 	}
 
-	@Transacional
 	@Override
 	public void getAtualizarAluno(Pessoa pessoa) throws RegraDeNegocioException {
 		getVerificarNumeroAtualizado(pessoa);

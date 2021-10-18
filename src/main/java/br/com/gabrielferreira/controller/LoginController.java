@@ -1,7 +1,6 @@
 package br.com.gabrielferreira.controller;
 
 import java.io.Serializable;
-import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -9,6 +8,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpSession;
 
 import br.com.gabrielferreira.entidade.Usuario;
 import br.com.gabrielferreira.service.impl.UsuarioServiceImpl;
@@ -18,6 +18,8 @@ import lombok.Setter;
 
 @Named
 @SessionScoped
+@Getter
+@Setter
 public class LoginController implements Serializable{
 
 	/**
@@ -27,14 +29,8 @@ public class LoginController implements Serializable{
 	
 	@Inject
 	private UsuarioServiceImpl usuarioServiceImpl;
-
-	@Getter
-	@Setter
-	private Usuario usuario;
 	
-	@Getter
-	@Setter
-	private boolean passou;
+	private Usuario usuario;
 	
 	@PostConstruct
 	public void inicializar() {
@@ -42,18 +38,23 @@ public class LoginController implements Serializable{
 	}
 	
 	public String logar() {
-		List<Usuario> usuarios = usuarioServiceImpl.getVerificarEmailAndSenha(usuario.getEmail(),usuario.getSenha());
-		if(!usuarios.isEmpty()) {
-			passou = true;
-			usuario.setNomeCompleto(usuarios.get(0).getNomeCompleto());
+		Usuario usuarioLogado = usuarioServiceImpl.getVerificarEmailAndSenha(usuario.getEmail(),usuario.getSenha());
+		if(usuarioLogado != null) {
+			HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance().getExternalContext()
+					.getSession(false);
+			this.usuario = usuarioLogado;
+			httpSession.setAttribute("usuarioLogado", usuarioLogado);
 			return "/HomePrincipal.xhtml?faces-redirect=true";
 		}
-		FacesMessages.adicionarMensagem("loginUsuarioForm:msg", FacesMessage.SEVERITY_ERROR, "Usuário e/ou senha inválidos !",
+		FacesMessages.adicionarMensagem("loginUsuarioForm:msg", FacesMessage.SEVERITY_ERROR, "E-mail e/ou senha inválidos !",
 				null);
 		return null;
 	}
 	
 	public String logout() {
+		HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance().getExternalContext()
+				.getSession(false);
+		httpSession.removeAttribute("usuarioLogado");
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 		return "/login/LoginUsuario.xhtml?faces-redirect=true";
 	}

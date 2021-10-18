@@ -11,13 +11,6 @@
 
 	<ui:define name="titulo">
 		<h1>Bem vindo, #{loginController.usuario.nomeCompleto}</h1>
-		
-		<br/>
-		<h:form>
-			<p:commandButton value="Deslogar" action="#{loginController.logout}"
-					 ajax="false" />
-		</h:form>
-		
 	</ui:define>
 		
 	</ui:composition>

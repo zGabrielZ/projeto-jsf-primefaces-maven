@@ -22,7 +22,6 @@ import br.com.gabrielferreira.exception.RegraDeNegocioException;
 import br.com.gabrielferreira.search.AlunoSearch;
 import br.com.gabrielferreira.service.impl.AlunoServiceImpl;
 import br.com.gabrielferreira.utils.FacesMessages;
-import br.com.gabrielferreira.utils.SessionUtil;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -144,13 +143,13 @@ public class AlunoController implements Serializable{
 	
 	public String selecionarTelefone(Aluno aluno) {
 		this.aluno = aluno;
-		SessionUtil.setParam("telefone", aluno);
+		//SessionUtil.setParam("telefone", aluno);
 		return "/telefone/CadastroTelefone?faces-redirect=true&codigo="+this.aluno.getId();
 	}
 	
 	public String selecionarConsultaTelefone(Aluno aluno) {
 		this.aluno = aluno;
-		SessionUtil.setParam("telefone", aluno);
+		//SessionUtil.setParam("telefone", aluno);
 		return "/telefone/ConsultaTelefone?faces-redirect=true&codigo="+this.aluno.getId();
 	}
 	

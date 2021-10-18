@@ -51,11 +51,11 @@
   </filter-mapping>
   
   <filter>
-  	<filter-name>UsuarioFilter</filter-name>
-  	<filter-class>br.com.gabrielferreira.filter.UsuarioFilter</filter-class>
+  	<filter-name>LoginFilter</filter-name>
+  	<filter-class>br.com.gabrielferreira.filter.LoginFilter</filter-class>
   </filter>
   <filter-mapping>
-  	<filter-name>UsuarioFilter</filter-name>
+  	<filter-name>LoginFilter</filter-name>
   	<url-pattern>/*</url-pattern>
   </filter-mapping>
   

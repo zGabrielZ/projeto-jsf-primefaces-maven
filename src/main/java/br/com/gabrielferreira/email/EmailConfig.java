@@ -20,8 +20,8 @@ public class EmailConfig implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
 	private String email = "ferreiragab261297@gmail.com";
-	private String senha = "gabriel123";
-	private String listaDestinatarios = "ferreiragabriel2612@gmail.com, ferreiragab261297@gmail.com";
+	private String senha = "Palmeiras2023";
+	private String listaDestinatarios = "ferreiragabriel2612@gmail.com, ferreiragab261297@gmail.com, gferreira1@stefanini.com, ferreiragabriel2612@yahoo.com";
 	private String nomeRemetente = "Gabriel Ferreira";
 	private String assunto;
 	private String texto;

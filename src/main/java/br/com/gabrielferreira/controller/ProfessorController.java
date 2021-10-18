@@ -22,7 +22,6 @@ import br.com.gabrielferreira.exception.RegraDeNegocioException;
 import br.com.gabrielferreira.search.ProfessorSearch;
 import br.com.gabrielferreira.service.impl.ProfessorServiceImpl;
 import br.com.gabrielferreira.utils.FacesMessages;
-import br.com.gabrielferreira.utils.SessionUtil;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -153,13 +152,13 @@ public class ProfessorController implements Serializable{
 	
 	public String selecionarTelefone(Professor professor) {
 		this.professor = professor;
-		SessionUtil.setParam("telefone", professor);
+		//SessionUtil.setParam("telefone", professor);
 		return "/telefone/CadastroTelefone?faces-redirect=true&codigo="+this.professor.getId();
 	}
 	
 	public String selecionarConsultaTelefone(Professor professor) {
 		this.professor = professor;
-		SessionUtil.setParam("telefone", professor);
+		//SessionUtil.setParam("telefone", professor);
 		return "/telefone/ConsultaTelefone?faces-redirect=true&codigo="+this.professor.getId();
 	}
 	

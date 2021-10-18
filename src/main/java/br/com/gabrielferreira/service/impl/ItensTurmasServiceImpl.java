@@ -9,7 +9,6 @@ import br.com.gabrielferreira.entidade.ItensTurma;
 import br.com.gabrielferreira.exception.RegraDeNegocioException;
 import br.com.gabrielferreira.repositorio.ItensTurmasRepositorio;
 import br.com.gabrielferreira.service.ItensTurmasService;
-import br.com.gabrielferreira.utils.Transacional;
 
 public class ItensTurmasServiceImpl implements Serializable,ItensTurmasService{
 
@@ -21,14 +20,12 @@ public class ItensTurmasServiceImpl implements Serializable,ItensTurmasService{
 	@Inject
 	private ItensTurmasRepositorio itensTurmasRepositorio;
 
-	@Transacional
 	@Override
 	public void getInserirItensTurmas(ItensTurma itensTurma) throws RegraDeNegocioException {
 		getVerificarProfessorAndTurmaRepetido(itensTurma);
 		itensTurmasRepositorio.inserir(itensTurma);
 	}
 
-	@Transacional
 	@Override
 	public void getRemoverItensTurmas(ItensTurma itensTurma) {
 		itensTurmasRepositorio.remover(itensTurma);

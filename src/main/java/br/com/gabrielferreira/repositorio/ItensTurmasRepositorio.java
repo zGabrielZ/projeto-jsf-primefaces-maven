@@ -18,7 +18,7 @@ public class ItensTurmasRepositorio implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	@Inject
+	//@Inject
 	private EntityManager entityManager;
 	
 	@Inject

@@ -5,7 +5,8 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:o="http://omnifaces.org/ui">
 
 <ui:composition template="/layout/login/TelaLogin.xhtml">
 
@@ -27,29 +28,26 @@
 				label="Código" type="hidden"></p:inputText>
 
 			<div align="center">
-				<h:panelGrid columns="3" style="text-align: center">
+				<h:panelGrid columns="2" style="text-align: center">
 					<p:outputLabel for="email" value="E-mail: " />
 					<p:inputText value="#{loginController.usuario.email}" required="true"
 						label="E-mail" id="email">
 					</p:inputText>
-					<p:message for="email" />
 
 					<p:outputLabel for="senha" value="Senha: " />
 					<p:password label="Senha" value="#{loginController.usuario.senha}" required="true"
 						id="senha" />
-					<p:message for="senha" />
+						
+					<p:commandButton value="Logar" action="#{loginController.logar}"
+					 ajax="false" update="@form" style="width:100%;" ></p:commandButton>
+					 
+					 <p:commandButton style="width:100%;" value="Cadastrar"
+					 ajax="false" action="#{navegacaoController.cadastrarUsuario}" update="@form">
+						<o:skipValidators />	 
+					</p:commandButton>
 					
 				</h:panelGrid>
 			</div>
-
-			<div align="center" style="padding-top: 10px;">
-				<p:commandButton value="Logar" action="#{loginController.logar}"
-					 ajax="false" process="@form"></p:commandButton>
-					 
-				<p:commandButton style="margin-left:20px;" value="Cadastrar" immediate="true"
-					 ajax="false" action="#{navegacaoController.cadastrarUsuario}" process="@form"></p:commandButton>
-			</div>
-
 		</h:form>
 
 	</ui:define>

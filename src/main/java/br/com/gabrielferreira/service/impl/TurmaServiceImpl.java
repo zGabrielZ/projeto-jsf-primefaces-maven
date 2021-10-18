@@ -18,7 +18,6 @@ import br.com.gabrielferreira.repositorio.TurmaRepositorio;
 import br.com.gabrielferreira.search.TurmaSearch;
 import br.com.gabrielferreira.service.TurmaService;
 import br.com.gabrielferreira.utils.FacesMessages;
-import br.com.gabrielferreira.utils.Transacional;
 import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -35,14 +34,12 @@ public class TurmaServiceImpl implements Serializable,TurmaService{
 
 	@Inject
 	private TurmaRepositorio turmaRepositorio;
-
-	@Transacional
+	
 	@Override
 	public void getRemoverTurma(Turma turma) {
 		turmaRepositorio.remover(turma);
 	}
-
-	@Transacional
+	
 	@Override
 	public void getInserirTurma(Turma turma) throws RegraDeNegocioException {
 		getVerificarNomeAndTurno(turma);
@@ -54,8 +51,7 @@ public class TurmaServiceImpl implements Serializable,TurmaService{
 		List<TurmaDTO> filtrados = turmaRepositorio.filtrar(turmaSearch);
 		return filtrados;
 	}
-
-	@Transacional
+	
 	@Override
 	public void getAtualizarTurma(Turma turma) throws RegraDeNegocioException {
 		getVerificarNomeAndTurnoAtualizado(turma);

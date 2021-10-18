@@ -12,7 +12,6 @@ import javax.inject.Inject;
 
 import br.com.gabrielferreira.repositorio.TelefoneRepositorio;
 import br.com.gabrielferreira.service.TelefoneService;
-import br.com.gabrielferreira.utils.Transacional;
 
 public class TelefoneServiceImpl implements Serializable,TelefoneService{
 
@@ -24,23 +23,18 @@ public class TelefoneServiceImpl implements Serializable,TelefoneService{
 	@Inject
 	private TelefoneRepositorio telefoneRepositorio;
 	
-
-	@Transacional
 	@Override
 	public void getInserirTelefone(Telefone telefone, Pessoa pessoa) throws RegraDeNegocioException {
 		getVerificarNumero(telefone);
 		telefoneRepositorio.inserir(telefone, pessoa);
 	}
-
-	@Transacional
+	
 	@Override
 	public void getAtualizarTelefone(Telefone telefone) throws RegraDeNegocioException {
 		getVerificarNumeroAtualizado(telefone);
 		telefoneRepositorio.atualizar(telefone);
 	}
 	
-
-	@Transacional
 	@Override
 	public void getRemoverTelefone(Telefone telefone) {
 		telefoneRepositorio.remover(telefone);
