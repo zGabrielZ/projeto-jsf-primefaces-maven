@@ -7,37 +7,49 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-	<ui:composition template="/layout/consulta/Consulta.xhtml" >
+<ui:composition template="/layout/consulta/Consulta.xhtml">
 
 	<ui:define name="titulo">
-			<h1>Gerar relatório para alunos cadastrados</h1>
-		</ui:define>
-		
-		<ui:define name="consulta">
-			<p:panelGrid>
-				<h:form id="frmConsulta" >
-				
-					<p:messages id="msg" autoUpdate="true"/>
-				
-					<p:outputLabel  for="nome" value="Nome:" />
-					<p:inputText style="margin-left:10px;" id="nome" value="#{gerarRelatorioController.alunoRelatorio.nome}" ></p:inputText>
+		<h1>Gerar relatório para alunos cadastrados</h1>
+	</ui:define>
 
-					<p:outputLabel style="margin-left:10px;" for="sexo" value="Sexo:" />
-					<p:selectOneMenu style="margin-left:10px; position: relative; top: 7px; " id="sexo" value="#{gerarRelatorioController.alunoRelatorio.sexo}"  >
+	<ui:define name="consulta">
+		<div id="frmRelatorioAluno" align="center">
+			<h:form id="frmConsulta">
+
+				<p:messages id="msg" autoUpdate="true" />
+
+				<h:panelGrid columns="2">
+					<p:outputLabel for="nome" value="Nome:" />
+					<p:inputText id="nome" value="#{gerarRelatorioController.alunoRelatorio.nome}"></p:inputText>
+
+					<p:outputLabel for="sexo" value="Sexo:" />
+					<p:selectOneMenu id="sexo" value="#{gerarRelatorioController.alunoRelatorio.sexo}">
 						<f:selectItem itemLabel="Selecione" />
-						<f:selectItems value="#{gerarRelatorioController.sexos}" var="sexo"
-							itemLabel="#{sexo.descricao}" itemValue="#{sexo}" />
+						<f:selectItems value="#{gerarRelatorioController.sexos}"
+							var="sexo" itemLabel="#{sexo.descricao}" itemValue="#{sexo}" />
 					</p:selectOneMenu>
-					
-					<p:outputLabel style="margin-left:10px;"  for="turma" value="Turma:" />
-					<p:inputText style="left:14px; position: relative;" id="turma" value="#{gerarRelatorioController.alunoRelatorio.turma}" />
 
-					<p:commandLink style="margin-left:20px;text-decoration:none;" id="gerar" value="Gerar Relatório" ajax="false" 
-						action="#{gerarRelatorioController.gerarRelatorioAluno}" process="@form" update="@form"
-						target="_blank" />
-				</h:form>
-			</p:panelGrid>
-		</ui:define>
-		
-	</ui:composition>
+					<p:outputLabel for="turma" value="Turma:" />
+					<p:inputText id="turma"
+						value="#{gerarRelatorioController.alunoRelatorio.turma}" />
+
+					<p:commandLink style="text-decoration:none;"
+						id="gerar" value="Gerar Relatório" ajax="false"
+						action="#{gerarRelatorioController.gerarRelatorioAluno}"
+						update="@form" target="_blank" />
+						
+					<p:commandLink style="text-decoration:none;margin-left:10px;"
+						id="limpar" value="Limpar" ajax="false"
+						action="#{gerarRelatorioController.novoAluno}"
+						update="@form" />
+					
+						
+				</h:panelGrid>
+
+			</h:form>
+		</div>
+	</ui:define>
+
+</ui:composition>
 </html>

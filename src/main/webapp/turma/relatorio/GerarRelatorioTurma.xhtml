@@ -7,34 +7,43 @@
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-	<ui:composition template="/layout/consulta/Consulta.xhtml" >
+<ui:composition template="/layout/consulta/Consulta.xhtml">
 
 	<ui:define name="titulo">
-			<h1>Gerar relatório para turmas cadastradas</h1>
-		</ui:define>
-		
-		<ui:define name="consulta">
-			<p:panelGrid>
-				<h:form id="frmConsulta" >
-				
-					<p:messages id="msg" autoUpdate="true"/>
-				
-					<p:outputLabel  for="nome" value="Nome:" />
-					<p:inputText style="margin-left:10px;" id="nome" value="#{gerarRelatorioController.turmaRelatorio.nome}" ></p:inputText>
+		<h1>Gerar relatório para turmas cadastradas</h1>
+	</ui:define>
 
-					<p:outputLabel style="margin-left:10px;" for="turno" value="Turno:" />
-					<p:selectOneMenu style="margin-left:10px; position: relative; top: 7px; " id="turno" value="#{gerarRelatorioController.turmaRelatorio.turno}"  >
+	<ui:define name="consulta">
+		<h:form id="frmConsulta">
+
+			<p:messages id="msg" autoUpdate="true" />
+
+			<div id="frmRelatorioTurma" align="center" >
+				<h:panelGrid columns="2">
+					<p:outputLabel for="nome" value="Nome:" />
+					<p:inputText id="nome" value="#{gerarRelatorioController.turmaRelatorio.nome}"></p:inputText>
+
+					<p:outputLabel for="turno" value="Turno:" />
+					<p:selectOneMenu id="turno" value="#{gerarRelatorioController.turmaRelatorio.turno}">
 						<f:selectItem itemLabel="Selecione" />
-						<f:selectItems value="#{gerarRelatorioController.turnos}" var="turno"
-							itemLabel="#{turno.descricao}" itemValue="#{turno}" />
+						<f:selectItems value="#{gerarRelatorioController.turnos}"
+							var="turno" itemLabel="#{turno.descricao}" itemValue="#{turno}" />
 					</p:selectOneMenu>
 
-					<p:commandLink style="margin-left:10px;text-decoration:none;" id="gerar" value="Gerar Relatório" ajax="false" 
-						action="#{gerarRelatorioController.gerarRelatorioTurma}" process="@form" update="@form"
-						target="_blank" />
-				</h:form>
-			</p:panelGrid>
-		</ui:define>
-		
-	</ui:composition>
+					<p:commandLink style="text-decoration:none;"
+						id="gerar" value="Gerar Relatório" ajax="false"
+						action="#{gerarRelatorioController.gerarRelatorioTurma}"
+						process="@form" update="@form" target="_blank" />
+
+					<p:commandLink style="text-decoration:none;margin-left:10px;"
+						id="limpar" value="Limpar" ajax="false"
+						action="#{gerarRelatorioController.novoTurma}"
+						update="@form" />
+				</h:panelGrid>
+			</div>
+
+		</h:form>
+	</ui:define>
+
+</ui:composition>
 </html>

@@ -78,6 +78,18 @@ public class GerarRelatorioController implements Serializable{
 		alunoRelatorio = new AlunoRelatorio();
 	}
 	
+	public void novoTurma() {
+		turmaRelatorio = new TurmaRelatorio();
+	}
+	
+	public void novoAluno() {
+		alunoRelatorio = new AlunoRelatorio();
+	}
+	
+	public void novoProfessor() {
+		professorRelatorio = new ProfessorRelatorio();
+	}
+	
 	public Sexo[] getSexos() {
 		return Sexo.values();
 	}
