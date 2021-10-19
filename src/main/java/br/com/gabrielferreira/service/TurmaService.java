@@ -12,13 +12,13 @@ public interface TurmaService {
 	
 	void getInserirTurma(Turma turma) throws RegraDeNegocioException;
 	
-	void getAtualizarTurma(Turma turma) throws RegraDeNegocioException;
+	Turma getAtualizarTurma(Turma turma) throws RegraDeNegocioException;
 	
 	void getRemoverTurma(Turma turma);
 		
 	List<TurmaDTO> getFiltar(TurmaSearch turmaSearch);
 	
-	List<Turma> getVerificarNumero(String numero);
+	void getVerificarNumero(String numero) throws RegraDeNegocioException;
 	
 	List<TurmaRelDTO> getListarTurmasRelatorio(String nome, String turno);
 	
@@ -33,5 +33,7 @@ public interface TurmaService {
 	List<Turma> getListarTurmas();
 	
 	Turma getById(Integer id);
+	
+	Turma getTurmaDetalhes(Integer id);
 	
 }

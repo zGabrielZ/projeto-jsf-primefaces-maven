@@ -37,11 +37,12 @@ public class TurmaServiceImpl implements Serializable,TurmaService{
 	
 	@Override
 	public void getRemoverTurma(Turma turma) {
-		turmaRepositorio.remover(turma);
+		turmaRepositorio.deletarPorId(Turma.class, turma.getId());
 	}
 	
 	@Override
 	public void getInserirTurma(Turma turma) throws RegraDeNegocioException {
+		getVerificarNumero(turma.getNumeroTurma());
 		getVerificarNomeAndTurno(turma);
 		turmaRepositorio.inserir(turma);
 	}
@@ -53,16 +54,17 @@ public class TurmaServiceImpl implements Serializable,TurmaService{
 	}
 	
 	@Override
-	public void getAtualizarTurma(Turma turma) throws RegraDeNegocioException {
+	public Turma getAtualizarTurma(Turma turma) throws RegraDeNegocioException {
 		getVerificarNomeAndTurnoAtualizado(turma);
 		getVerificarNumeroAtualizado(turma);
-		turmaRepositorio.atualizar(turma);
+		return turmaRepositorio.atualizar(turma);
 	}
 	
 	@Override
-	public List<Turma> getVerificarNumero(String numero) {
-		List<Turma> verificar = turmaRepositorio.verificarNumero(numero);
-		return verificar;
+	public void getVerificarNumero(String numero) throws RegraDeNegocioException {
+		if(turmaRepositorio.verificarNumero(numero)){
+			throw new RegraDeNegocioException("Não é possível cadastrar este número da turma, pois já está cadastrado !");
+		} 
 	}
 
 	@Override
@@ -88,13 +90,13 @@ public class TurmaServiceImpl implements Serializable,TurmaService{
 
 	@Override
 	public List<Turma> getListarTurmas() {
-		List<Turma> turmas = turmaRepositorio.listarTurmas();
+		List<Turma> turmas = turmaRepositorio.listagem(Turma.class);
 		return turmas;
 	}
 
 	@Override
 	public Turma getById(Integer id) {
-		Turma turma = turmaRepositorio.procurarPorId(id);
+		Turma turma = turmaRepositorio.pesquisarPorId(id, Turma.class);
 		return turma;
 	}
 
@@ -133,6 +135,11 @@ public class TurmaServiceImpl implements Serializable,TurmaService{
 					null);
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public Turma getTurmaDetalhes(Integer id) {
+		return turmaRepositorio.getTurmaDetalhes(id);
 	}
 
 }

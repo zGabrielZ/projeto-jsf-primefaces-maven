@@ -71,14 +71,16 @@
 				<p:column style="width:60px;" >
 					<f:facet name="header">Detalhe</f:facet>
 					<p:commandButton title="Detalhe da turma" icon="fa fa-search"  
-						process="@this" action="#{turmaController.selecionarTurma(turma)}"></p:commandButton>
+						process="@this" update="@form" action="DetalheTurma">
+						<f:param name="codigoDetalheTurma" value="#{turma.id}" />	
+					</p:commandButton>
 				</p:column>
 				
 				<p:column style="width:100px;" >
 					<f:facet name="header">Editar</f:facet>
-					<p:commandButton icon="fa fa-pencil"
-						action="#{turmaController.editarTurma(turma)}" 
-						update="dataTableTurmas" process="@this" title="Editar esta turma" >
+					<p:commandButton icon="fa fa-pencil" action="CadastroTurma" 
+						update="@form" process="@this" title="Editar esta turma" >
+						<f:param name="codigoAtualilzarTurma" value="#{turma.id}" />
 					</p:commandButton> 
 				</p:column>
 				

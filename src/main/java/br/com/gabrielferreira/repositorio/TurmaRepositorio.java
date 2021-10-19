@@ -1,12 +1,9 @@
 package br.com.gabrielferreira.repositorio;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -19,20 +16,18 @@ import br.com.gabrielferreira.entidade.Turma;
 import br.com.gabrielferreira.entidade.dto.TurmaDTO;
 import br.com.gabrielferreira.entidade.dto.relatorio.TurmaRelDTO;
 import br.com.gabrielferreira.entidade.enums.Turno;
+import br.com.gabrielferreira.repositorio.generico.RepositorioGenerico;
 import br.com.gabrielferreira.search.TurmaSearch;
 
-public class TurmaRepositorio implements Serializable{
+public class TurmaRepositorio extends RepositorioGenerico<Turma>{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	//@Inject
-	private EntityManager entityManager;
-	
 	public List<TurmaDTO> filtrar(TurmaSearch turmaSearch){
-		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		
 		CriteriaQuery<Turma> criteriaQuery = criteriaBuilder.createQuery(Turma.class);
 		Root<Turma> root = criteriaQuery.from(Turma.class);
@@ -54,48 +49,30 @@ public class TurmaRepositorio implements Serializable{
 			predicates.add(predicateNumero);
 		}
 		
+		criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
 		criteriaQuery.where((Predicate[])predicates.toArray(new Predicate[0]));
 		
-		TypedQuery<Turma> typedQuery = entityManager.createQuery(criteriaQuery);
+		TypedQuery<Turma> typedQuery = getEntityManager().createQuery(criteriaQuery);
 
 		List<Turma> turmas = typedQuery.getResultList();
 		
 		return turmas.stream().map(x -> new TurmaDTO(x)).collect(Collectors.toList());
 	}
 
-	public TurmaRepositorio() {}
-	
-	public void inserir(Turma turma) {
-		entityManager.persist(turma);
-	}
-	
-	public Turma procurarPorId(Integer id) {
-		return entityManager.find(Turma.class, id);
-	}
-	
-	public void remover(Turma turma) {
-		turma = procurarPorId(turma.getId());
-		entityManager.remove(turma);
-	}
-	
-	public void atualizar(Turma turma) {
-		entityManager.merge(turma);
-	}
-
 	public boolean verificarNomeAndTurno(String nome,Turno turno){
 		String jpql = "SELECT t FROM Turma t where t.nomeTurma = :nome and t.turno = :turno";
-		TypedQuery<Turma> query = entityManager.createQuery(jpql,Turma.class);
+		TypedQuery<Turma> query = getEntityManager().createQuery(jpql,Turma.class);
 		query.setParameter("nome", nome);
 		query.setParameter("turno", turno);
 		
 		List<Turma> turmas = query.getResultList();
 		
-		return !turmas.isEmpty()?true:false;
+		return !turmas.isEmpty() ? true : false;
 	}
 	
 	public boolean verificarNomeAndTurnoAtualizado(String nome,Turno turno,Integer id){
 		String jpql = "SELECT t FROM Turma t where t.nomeTurma = :nome and t.turno = :turno and t.id <> :id ";
-		TypedQuery<Turma> query = entityManager.createQuery(jpql,Turma.class);
+		TypedQuery<Turma> query = getEntityManager().createQuery(jpql,Turma.class);
 		query.setParameter("nome", nome);
 		query.setParameter("turno", turno);
 		query.setParameter("id", id);
@@ -107,38 +84,41 @@ public class TurmaRepositorio implements Serializable{
 		
 	public boolean verificarNumeroAtualizado(String numero,Integer id){
 		String jpql = "SELECT t FROM Turma t where t.numeroTurma = :numero and t.id <> :id";
-		TypedQuery<Turma> query = entityManager.createQuery(jpql,Turma.class);
+		TypedQuery<Turma> query = getEntityManager().createQuery(jpql,Turma.class);
 		query.setParameter("numero", numero);
 		query.setParameter("id", id);
 		List<Turma> verificar = query.getResultList();
 		
-		return !verificar.isEmpty()?true:false;
+		return !verificar.isEmpty() ? true : false;
 	}
 	
-	public List<Turma> verificarNumero(String numero){
+	public boolean verificarNumero(String numero){
 		String jpql = "SELECT t FROM Turma t where t.numeroTurma = :numero";
-		TypedQuery<Turma> query = entityManager.createQuery(jpql,Turma.class);
+		TypedQuery<Turma> query = getEntityManager().createQuery(jpql,Turma.class);
 		query.setParameter("numero", numero);
-		return query.getResultList();
-	}
-	
-	public List<Turma> listarTurmas(){
-		String jpql = "SELECT t FROM Turma t";
-		TypedQuery<Turma> query = entityManager.createQuery(jpql,Turma.class);
-		return query.getResultList();
+		List<Turma> turmas = query.getResultList();
+		return !turmas.isEmpty() ? true : false;
 	}
 	
 	public List<Turma> verificarTurmaId(Integer id){
 		String jpql = "SELECT t FROM Turma t where t.id = :id";
-		TypedQuery<Turma> query = entityManager.createQuery(jpql,Turma.class);
+		TypedQuery<Turma> query = getEntityManager().createQuery(jpql,Turma.class);
 		query.setParameter("id", id);
 		return query.getResultList();
+	}
+	
+	public Turma getTurmaDetalhes(Integer idTurma){
+		String jpql = "SELECT t FROM Turma t left join t.alunos a left join t.itensTurmas i where t.id = :idTurma";
+		TypedQuery<Turma> query = getEntityManager().createQuery(jpql,Turma.class);
+		query.setParameter("idTurma", idTurma);
+		Turma turma = verificarNulo(query);
+		return turma;
 	}
 	
 	
 	@SuppressWarnings("unchecked")
 	public List<TurmaRelDTO> listarTurmasRelatorio(String nome, String turno){
-		Query query = entityManager.createNamedQuery("Turma.findListarTurmas");
+		Query query = getEntityManager().createNamedQuery("Turma.findListarTurmas");
 		query.setParameter("nome", "%"+nome+"%");
 		query.setParameter("turno", "%"+turno+"%");
 		

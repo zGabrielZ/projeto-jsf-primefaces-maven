@@ -3,7 +3,6 @@ package br.com.gabrielferreira.entidade;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -22,7 +21,6 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import br.com.gabrielferreira.entidade.enums.Turno;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,7 +31,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString(exclude= {"alunos","itensTurmas"})
-@EqualsAndHashCode
 @Entity
 @Table(name = "tab_turma")
 public class Turma implements Serializable{
@@ -45,7 +42,6 @@ public class Turma implements Serializable{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@EqualsAndHashCode.Include
 	private Integer id;
 	
 	@NotBlank(message = "Campo da turma não pode ser vazia")
@@ -72,6 +68,33 @@ public class Turma implements Serializable{
 	
 	@OneToMany(mappedBy="turma", fetch = FetchType.LAZY)
 	private List<ItensTurma> itensTurmas = new ArrayList<>();
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Turma other = (Turma) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
+	}
+	
+	
 	
 	
 }

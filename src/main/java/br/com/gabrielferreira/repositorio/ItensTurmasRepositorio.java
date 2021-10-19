@@ -31,7 +31,7 @@ public class ItensTurmasRepositorio implements Serializable{
 	
 	public void inserir(ItensTurma itensTurma) {
 		Pessoa pessoa = pessoaRepositorio.procurarPorId(itensTurma.getProfessor().getId());
-		Turma turma = turmaRepositorio.procurarPorId(itensTurma.getTurma().getId());
+		Turma turma = turmaRepositorio.pesquisarPorId(itensTurma.getTurma().getId(), Turma.class);
 		
 		Professor professor = (Professor) pessoa;
 		professor.getItensTurmas().add(itensTurma);

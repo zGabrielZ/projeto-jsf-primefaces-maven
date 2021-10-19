@@ -5,13 +5,11 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
-import javax.faces.component.UIViewRoot;
-import javax.faces.component.html.HtmlInputText;
-import javax.faces.component.html.HtmlSelectOneMenu;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.RollbackException;
 
 import br.com.gabrielferreira.email.TurmaEmail;
 import br.com.gabrielferreira.entidade.Turma;
@@ -26,6 +24,8 @@ import lombok.Setter;
 
 @Named
 @ViewScoped
+@Getter
+@Setter
 public class TurmaController implements Serializable{
 
 	/**
@@ -37,35 +37,39 @@ public class TurmaController implements Serializable{
 	private TurmaServiceImpl turmaServiceImpl;
 	
 	@Inject
-	private NavegacaoController navegacaoController;
-	
-	@Inject
 	private TurmaEmail turmaEmail;
 	
-	@Getter
-	@Setter
 	private List<TurmaDTO> turmas;
 	
-	@Getter
-	@Setter
+	private Turma turmaDetalhes;
+	
 	private TurmaSearch turmaSearchParam;
 	
-	@Getter
-	@Setter
 	private Turma turma;
-	
-	@Getter
-	@Setter
+
 	private TurmaDTO turmaSelecionado;
 	
-	@Getter
-	@Setter
 	private boolean enviarEmailTurmaCadatrado;
 	
 	@PostConstruct
 	public void inicializar() {
 		turmaSearchParam = new TurmaSearch();
 		turma = new Turma();
+		verificarParametro();
+	}
+	
+	private void verificarParametro() {
+		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		String idDetalheTurma = params.get("codigoDetalheTurma");
+		String idAtualilzarTurma = params.get("codigoAtualilzarTurma");
+		
+		if(idDetalheTurma != null) {
+			turmaDetalhes = turmaServiceImpl.getTurmaDetalhes(Integer.parseInt(idDetalheTurma));
+		}
+		
+		if(idAtualilzarTurma != null) {
+			turma = turmaServiceImpl.getById(Integer.parseInt(idAtualilzarTurma));
+		}
 	}
 	
 	public void consultar() {
@@ -74,41 +78,36 @@ public class TurmaController implements Serializable{
 	
 	public void cadastrar() {
 		if(turma.getId() == null) {
-			inserirTurma(turma);
-			turma = new Turma();
+			inserirTurma();
 		} else {
-			atualizarTurma(turma);
-		}
-			
+			atualizarTurma();
+		}	
 	}
 	
-	private void inserirTurma(Turma turma) {
+	private void inserirTurma() {
 		try {
 			turmaServiceImpl.getInserirTurma(turma);
 			FacesMessages.adicionarMensagem("cadastroTurmasForm:msg", FacesMessage.SEVERITY_INFO, "Cadastrado com sucesso !",
 					null);
 			enviarEmailTurmaCadatrado = true;
-			turmaEmail.assuntoEmail(turma);
+			//turmaEmail.assuntoEmail(turma);
+			novo();
 		} catch (RegraDeNegocioException e) {
 			FacesMessages.adicionarMensagem("cadastroTurmasForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
 					null);
 		}
 	}
 	
-	private void atualizarTurma(Turma turma) {
+	private void atualizarTurma() {
 		try {
 			turmaServiceImpl.getAtualizarTurma(turma);
-			FacesMessages.adicionarMensagem("consultaTurmasForm:msg", FacesMessage.SEVERITY_INFO,
-					"Atualizado com sucesso !", null);
-
-			FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-
-			navegacaoController.consultaTurma();
-			
+			FacesMessages.adicionarMensagem("cadastroTurmasForm:msg", FacesMessage.SEVERITY_INFO,
+					"Atualizado com sucesso !", null);			
 			enviarEmailTurmaCadatrado = false;
-			turmaEmail.assuntoEmail(turma);
+			//turmaEmail.assuntoEmail(turma);
+			novo();
 		} catch (RegraDeNegocioException e) {
-			FacesMessages.adicionarMensagem("atualizarTurmasForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
+			FacesMessages.adicionarMensagem("cadastroTurmasForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
 					null);
 		}
 		
@@ -121,28 +120,14 @@ public class TurmaController implements Serializable{
 			consultar();
 			FacesMessages.adicionarMensagem("consultaTurmasForm:msg", FacesMessage.SEVERITY_INFO, "Removido com sucesso !",
 					null);
-			turmaEmail.assuntoEmailTurmaExcluido(turma);
-		} catch (Exception e) {
+			//turmaEmail.assuntoEmailTurmaExcluido(turma);
+		} catch (RollbackException e) {
 			FacesMessages.adicionarMensagem("consultaTurmasForm:msg", FacesMessage.SEVERITY_ERROR, "Não é possível excluir, pois tem aluno ou professor relacionado com essa turma !",
 					"Não é possível excluir !");
+		} catch(Exception e) {
+			FacesMessages.adicionarMensagem("consultaTurmasForm:msg", FacesMessage.SEVERITY_ERROR,e.getMessage(),
+					null);
 		}
-	}
-	
-	public void carregar() {
-		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-		String id = params.get("codigo");
-		turma = turmaServiceImpl.getById(Integer.parseInt(id));
-	}
-	
-	public String editarTurma(TurmaDTO turmaDTO) {
-		Turma turmaSel = getTurmaDto(turmaDTO);
-		this.turma = turmaSel;
-		return "/turma/atualizar/AtualizarTurma?faces-redirect=true&codigo="+this.turma.getId();
-	}
-	
-	public String selecionarTurma(TurmaDTO turmaDTO) {
-		this.turma = getTurmaDto(turmaDTO);
-		return "/turma/detalhe/DetalheTurma?faces-redirect=true&codigo="+this.turma.getId();
 	}
 
 	private Turma getTurmaDto(TurmaDTO turmaSelecionado) {
@@ -151,22 +136,13 @@ public class TurmaController implements Serializable{
 		return turma;
 	}
 	
-	public void limparFormulario() {
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-		UIViewRoot uiViewRoot = facesContext.getViewRoot();
-		HtmlInputText htmlInputTextNome = (HtmlInputText) uiViewRoot.findComponent("cadastroTurmasForm:nome");
-		HtmlInputText htmlInputTextNumero = (HtmlInputText) uiViewRoot.findComponent("cadastroTurmasForm:numero");
-		HtmlSelectOneMenu htmlInputTextTurno = (HtmlSelectOneMenu) uiViewRoot.findComponent("cadastroTurmasForm:turno");
-		HtmlInputText htmlInputTextVaga = (HtmlInputText) uiViewRoot.findComponent("cadastroTurmasForm:vaga");
-		htmlInputTextNome.setSubmittedValue("");
-		htmlInputTextNumero.setSubmittedValue("");
-		htmlInputTextVaga.setSubmittedValue("");
-		htmlInputTextTurno.setSubmittedValue("");
+	public void novo() {
 		turma = new Turma();
 	}
 	
 	public void limparCamposPesquisa() {
 		turmaSearchParam = new TurmaSearch();
+		consultar();
 	}
 	
 	public List<Turma> getTurmasConsultaAlunos(){
