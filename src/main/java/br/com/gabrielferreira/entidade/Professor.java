@@ -55,6 +55,7 @@ public class Professor extends Pessoa{
 	@Max(value = 12,message="Máximo é de doze quatro horas")
 	private Integer qtdHoras;
 	
+	@NotNull(message = "É necessário informar o tipo perfil")
 	@Enumerated(EnumType.STRING)
 	@Column(name="tipo_perfil")
 	private TipoPerfil tipoPerfil;

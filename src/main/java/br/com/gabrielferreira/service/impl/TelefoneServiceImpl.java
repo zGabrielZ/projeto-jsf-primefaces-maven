@@ -10,6 +10,7 @@ import br.com.gabrielferreira.exception.RegraDeNegocioException;
 
 import javax.inject.Inject;
 
+import br.com.gabrielferreira.repositorio.PessoaRepositorio;
 import br.com.gabrielferreira.repositorio.TelefoneRepositorio;
 import br.com.gabrielferreira.service.TelefoneService;
 
@@ -23,21 +24,29 @@ public class TelefoneServiceImpl implements Serializable,TelefoneService{
 	@Inject
 	private TelefoneRepositorio telefoneRepositorio;
 	
+	@Inject
+	private PessoaRepositorio pessoaRepositorio;
+	
 	@Override
 	public void getInserirTelefone(Telefone telefone, Pessoa pessoa) throws RegraDeNegocioException {
 		getVerificarNumero(telefone);
-		telefoneRepositorio.inserir(telefone, pessoa);
+		List<Telefone> telefones = getTelefonesByIdPessoa(pessoa.getId());
+		pessoa.setTelefones(telefones);
+		telefone.setPessoa(pessoa);
+		telefoneRepositorio.inserir(telefone);
+		pessoa.getTelefones().add(telefone);
+		pessoaRepositorio.atualizar(pessoa);
 	}
 	
 	@Override
-	public void getAtualizarTelefone(Telefone telefone) throws RegraDeNegocioException {
+	public Telefone getAtualizarTelefone(Telefone telefone) throws RegraDeNegocioException {
 		getVerificarNumeroAtualizado(telefone);
-		telefoneRepositorio.atualizar(telefone);
+		return telefoneRepositorio.atualizar(telefone);
 	}
 	
 	@Override
 	public void getRemoverTelefone(Telefone telefone) {
-		telefoneRepositorio.remover(telefone);
+		telefoneRepositorio.deletarPorId(Telefone.class, telefone.getId());
 	}
 
 	@Override
@@ -76,6 +85,11 @@ public class TelefoneServiceImpl implements Serializable,TelefoneService{
 	public List<TelefoneRelDTO> getByIdPessoa(Integer idPessoa) {
 		List<TelefoneRelDTO> telefoneRelDTOs = telefoneRepositorio.listarTelefonesRelatorio(idPessoa);
 		return telefoneRelDTOs;
+	}
+
+	@Override
+	public Telefone getByTelefone(Integer id) {
+		return telefoneRepositorio.pesquisarPorId(id, Telefone.class);
 	}
 	
 	

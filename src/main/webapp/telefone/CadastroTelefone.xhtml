@@ -5,58 +5,63 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui"
+	xmlns:p="http://primefaces.org/ui" 
 	xmlns:o="http://omnifaces.org/ui">
 
-	<ui:composition template="/layout/cadastro/Cadastrar.xhtml" >
+<ui:composition template="/layout/cadastro/Cadastrar.xhtml">
 
 	<ui:define name="titulo">
-			<h1>Cadastro de telefone</h1>
-			
-			<div id="btnVoltar" style="margin-bottom:10px; margin-top: 10px;" >
-				<h:form id="frmBtnConsulta">
-					<p:commandButton value="Ir para consulta de alunos" ajax="false" 
-						actionListener="#{navegacaoController.consultaAluno}" rendered="#{telefoneController.verificarAlunoOuProfessor}" />
-						
-					<p:commandButton value="Ir para consulta de professores" ajax="false" 
-						actionListener="#{navegacaoController.consultaProfessor}" rendered="#{!telefoneController.verificarAlunoOuProfessor}" /> 
-				</h:form>
-			</div>
+		<h1>Cadastro de telefone</h1>
+
+		<div id="btnVoltar" style="margin-bottom: 10px; margin-top: 10px;">
+			<h:form id="frmBtnConsulta">
+				<p:commandButton value="Ir para consulta de alunos" ajax="false"
+					actionListener="#{navegacaoController.consultaAluno}"
+					rendered="#{telefoneController.verificarAlunoOuProfessor}" />
+
+				<p:commandButton value="Ir para consulta de professores"
+					ajax="false"
+					actionListener="#{navegacaoController.consultaProfessor}"
+					rendered="#{!telefoneController.verificarAlunoOuProfessor}" />
+			</h:form>
+		</div>
 	</ui:define>
-		
-		<ui:define name="conteudo" >
-		<o:form id="cadastroTelefoneForm" includeRequestParams="true">
-		
-			<p:messages id="msg" autoUpdate="true"/>
-			
-			<p:inputText id="codigo" value="#{telefoneController.telefone.id}" label="Código" type="hidden"></p:inputText>
-			
-			<p:inputText id="pessoa" value="#{telefoneController.pessoa.id}" label="Pessoa" type="hidden"></p:inputText>
+
+	<ui:define name="conteudo">
+		<h:form id="cadastroTelefoneForm">
+
+			<p:messages id="msg" autoUpdate="true" />
+
+			<p:inputText id="codigo" value="#{telefoneController.telefone.id}"
+				label="Código" type="hidden"></p:inputText>
 
 			<div align="center">
-				<h:panelGrid columns="3" style="text-align: center">
+				<h:panelGrid columns="2" style="text-align: center">
 					<p:outputLabel for="ddd" value="DDD: " />
-					<p:inputText value="#{telefoneController.telefone.ddd}"
-						 label="DDD" id="ddd" maxlength="3" size="3" validator="#{verificarDDDValidator.validate}" >
+					<p:inputText value="#{telefoneController.telefone.ddd}" label="DDD"
+						id="ddd" maxlength="3" size="3"
+						validator="#{verificarDDDValidator.validate}">
 					</p:inputText>
-					<p:message for="ddd" />
 
 					<p:outputLabel for="telefone" value="Telefone: " />
 					<p:inputMask value="#{telefoneController.telefone.numero}"
-						label="Telefone" id="telefone" mask="99999-9999" size="9" maxlength="9" />
-					<p:message for="telefone" />
+						label="Telefone" id="telefone" mask="99999-9999" size="9"
+						maxlength="9" />
+
+					<p:commandButton value="Novo" action="#{telefoneController.novo}"
+						ajax="false" update="@form" style="width:100%;">
+						<o:skipValidators />
+					</p:commandButton>
+					<p:commandButton value="Cadastrar Telefone"
+						action="#{telefoneController.cadastrar}" ajax="false"
+						update="@form" style="width:100%" ></p:commandButton>
+
 
 				</h:panelGrid>
 			</div>
-
-			<div align="center" style="padding-top: 10px;" >
-					<p:commandButton value="Cadastrar Telefone" action="#{telefoneController.cadastrar}"
-						ajax="false" process="@form"></p:commandButton>
-			</div>
-
-		</o:form>
+		</h:form>
 
 	</ui:define>
-	
-	</ui:composition>
+
+</ui:composition>
 </html>

@@ -12,7 +12,7 @@ public interface ProfessorService {
 
 	void getInserirProfessor(Pessoa pessoa) throws RegraDeNegocioException;
 	
-	void getAtualizarProfessor(Pessoa pessoa) throws RegraDeNegocioException;
+	Pessoa getAtualizarProfessor(Pessoa pessoa) throws RegraDeNegocioException;
 	
 	void getRemoverProfessor(Pessoa pessoa);
 	

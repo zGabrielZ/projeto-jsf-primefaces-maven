@@ -38,6 +38,9 @@ public class AlunoServiceImpl implements Serializable,AlunoService{
 	private static final long serialVersionUID = 1L;
 
 	@Inject
+	private PessoaServiceImpl pessoaServiceImpl;
+	
+	@Inject
 	private AlunoRepositorio alunoRepositorio;
 	
 	@Inject
@@ -51,20 +54,25 @@ public class AlunoServiceImpl implements Serializable,AlunoService{
 	
 	@Override
 	public void getInserirAluno(Pessoa pessoa) throws RegraDeNegocioException {
+		Aluno aluno = (Aluno) pessoa;
+		pessoaServiceImpl.getVerificarCpf(pessoa.getCpf());
+		getVerificarNumero(aluno.getNumeroMatricula());
 		getVerificarAtualizarOuInserir(pessoa);
 		pessoaRepositorio.inserir(pessoa);
 	}
 
 	@Override
 	public void getRemoverAluno(Pessoa pessoa) {
-		pessoaRepositorio.remover(pessoa);
+		antigaVaga(pessoa);
+		pessoaRepositorio.deletarPorId(Pessoa.class,pessoa.getId());
 	}
 
 	@Override
-	public void getAtualizarAluno(Pessoa pessoa) throws RegraDeNegocioException {
+	public Pessoa getAtualizarAluno(Pessoa pessoa) throws RegraDeNegocioException {
+		pessoaServiceImpl.getVerificarCpfAtualizar(pessoa);
 		getVerificarNumeroAtualizado(pessoa);
 		getVerificarAtualizarOuInserir(pessoa);
-		pessoaRepositorio.atualizar(pessoa);
+		return pessoaRepositorio.atualizar(pessoa);
 	}
 
 	@Override
@@ -87,11 +95,10 @@ public class AlunoServiceImpl implements Serializable,AlunoService{
 					throw new RegraDeNegocioException("Não é possível atualizar este aluno nesta turma, pois acabou a vaga da turma : " + aluno.getTurma().getNomeTurma());
 				}
 				
-				Pessoa alunoAntigo = pessoaRepositorio.procurarPorId(aluno.getId()); 
-				Aluno alunoBuscadoAntigo = (Aluno) alunoAntigo;
+				Aluno alunoBuscadoAntigo = alunoRepositorio.pesquisarPorId(aluno.getId(),Aluno.class);
 				
 				if(!alunoBuscadoAntigo.getTurma().getId().equals(aluno.getTurma().getId())) {
-					antigaVaga(alunoAntigo);
+					antigaVaga(alunoBuscadoAntigo);
 					novaVaga(aluno);
 				}
 			}
@@ -116,15 +123,16 @@ public class AlunoServiceImpl implements Serializable,AlunoService{
 
 	@Override
 	public Aluno getConsultarDetalhe(Integer id) {
-		Pessoa pessoa = pessoaRepositorio.procurarPorId(id);
+		Pessoa pessoa = pessoaRepositorio.pesquisarPorId(id, Pessoa.class);
 		Aluno aluno = (Aluno) pessoa;
 		return aluno;
 	}
 
 	@Override
-	public boolean getVerificarNumero(String numero) {
-		boolean verificar = alunoRepositorio.verificarNumero(numero);
-		return verificar;
+	public void getVerificarNumero(String numero) throws RegraDeNegocioException { 
+		if(alunoRepositorio.verificarNumero(numero)) {
+			throw new RegraDeNegocioException("Não é possível cadastrar este número, pois já está cadastrado !");
+		}
 	}
 
 	@Override

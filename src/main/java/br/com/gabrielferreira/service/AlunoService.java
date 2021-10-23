@@ -12,7 +12,7 @@ public interface AlunoService {
 
 	void getInserirAluno(Pessoa pessoa) throws RegraDeNegocioException;
 	
-	void getAtualizarAluno(Pessoa pessoa) throws RegraDeNegocioException;
+	Pessoa getAtualizarAluno(Pessoa pessoa) throws RegraDeNegocioException;
 	
 	void getRemoverAluno(Pessoa pessoa);
 	
@@ -22,7 +22,7 @@ public interface AlunoService {
 	
 	Aluno getConsultarDetalhe(Integer id);
 	
-	boolean getVerificarNumero(String numero);
+	void getVerificarNumero(String numero) throws RegraDeNegocioException;
 	
 	void getVerificarNumeroAtualizado(Pessoa pessoa) throws RegraDeNegocioException;
 	

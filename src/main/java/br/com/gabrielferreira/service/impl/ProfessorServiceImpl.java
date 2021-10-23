@@ -38,6 +38,9 @@ public class ProfessorServiceImpl implements Serializable,ProfessorService{
 	private static final long serialVersionUID = 1L;
 	
 	@Inject
+	private PessoaServiceImpl pessoaServiceImpl;
+	
+	@Inject
 	private ProfessorRepositorio professorRepositorio;
 	
 	@Inject
@@ -48,17 +51,19 @@ public class ProfessorServiceImpl implements Serializable,ProfessorService{
 
 	@Override
 	public void getInserirProfessor(Pessoa pessoa) throws RegraDeNegocioException {
+		pessoaServiceImpl.getVerificarCpf(pessoa.getCpf());
 		pessoaRepositorio.inserir(pessoa);
 	}
 
 	@Override
-	public void getAtualizarProfessor(Pessoa pessoa) throws RegraDeNegocioException {
-		pessoaRepositorio.atualizar(pessoa);
+	public Pessoa getAtualizarProfessor(Pessoa pessoa) throws RegraDeNegocioException {
+		pessoaServiceImpl.getVerificarCpfAtualizar(pessoa);
+		return pessoaRepositorio.atualizar(pessoa);
 	}
 	
 	@Override
 	public void getRemoverProfessor(Pessoa pessoa) {
-		pessoaRepositorio.remover(pessoa);
+		pessoaRepositorio.deletarPorId(Pessoa.class, pessoa.getId());
 	}
 
 	@Override
@@ -69,7 +74,7 @@ public class ProfessorServiceImpl implements Serializable,ProfessorService{
 
 	@Override
 	public Professor getConsultarDetalhe(Integer id) {
-		Pessoa pessoa = pessoaRepositorio.procurarPorId(id);
+		Pessoa pessoa = pessoaRepositorio.pesquisarPorId(id, Pessoa.class);
 		Professor professor = (Professor) pessoa;
 		return professor;
 	}

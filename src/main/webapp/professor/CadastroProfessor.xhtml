@@ -5,109 +5,111 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	 xmlns:o="http://omnifaces.org/ui">
 
-	<ui:composition template="/layout/cadastro/Cadastrar.xhtml" >
+<ui:composition template="/layout/cadastro/Cadastrar.xhtml">
 
 	<ui:define name="titulo">
-			<h1>Cadastro de professor</h1>
-		
-			<div id="btnVoltar" style="margin-bottom:10px; margin-top: 10px;" >
-				<h:form id="frmBtnConsultaProfessor">
-					<p:commandButton value="Ir para consulta de professores" action="#{navegacaoController.consultaProfessor}" ajax="false" />
-				</h:form>
-			</div>
-		
-		</ui:define>
-		
-		<ui:define name="conteudo" >
-		<h:form id="cadastroProfessorForm" >
-		
-			<p:messages id="msg" autoUpdate="true"/>
-			
+		<h1>Cadastro de professor</h1>
+
+		<div id="btnVoltar" style="margin-bottom: 10px; margin-top: 10px;">
+			<h:form id="frmBtnConsultaProfessor">
+				<p:commandButton value="Ir para consulta de professores"
+					action="#{navegacaoController.consultaProfessor}" ajax="false" />
+			</h:form>
+		</div>
+
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h:form id="cadastroProfessorForm">
+
+			<p:messages id="msg" autoUpdate="true" />
+
 			<div align="center">
-				<p:tabView id="tabView" orientation="left" effect="fade" >
+				<p:tabView id="tabView" orientation="left" effect="fade">
 					<p:tab id="tab" title="Dados pessoais">
-						<p:inputText id="codigoDadosPessoais" value="#{professorController.professor.id}" label="Código Dados Pessoais" type="hidden"></p:inputText>
-						<h:panelGrid columns="3" style="text-align: center">
+						
+						<p:inputText id="codigoDadosPessoais"
+							value="#{professorController.professor.id}"
+							label="Código Dados Pessoais" type="hidden" />
+						
+						<h:panelGrid columns="2" style="text-align: center">
 							<p:outputLabel for="nome" value="Nome: " />
-							<p:inputText label="Nome" id="nome" value="#{professorController.professor.nomeCompleto}">
+							<p:inputText label="Nome" id="nome"
+								value="#{professorController.professor.nomeCompleto}">
 							</p:inputText>
-							<p:message for="nome" />
 
 							<p:outputLabel for="cpf" value="CPF: " />
 							<p:inputMask label="CPF" id="cpf" mask="999.999.999-99" size="10"
-								maxlength="14" value="#{professorController.professor.cpf}"
-								validator="#{verificarCpfPessoaValidator.validate}" />
-							<p:message for="cpf" />
+								maxlength="14" value="#{professorController.professor.cpf}" />
 
 							<p:outputLabel for="sexo" value="Sexo: " />
-							<p:selectOneMenu id="sexo" label="Sexo" value="#{professorController.professor.sexo}">
+							<p:selectOneMenu id="sexo" label="Sexo"
+								value="#{professorController.professor.sexo}">
 								<f:selectItem itemLabel="Selecione" />
 								<f:selectItems value="#{professorController.sexo}" var="sexo"
 									itemLabel="#{sexo.descricao}" itemValue="#{sexo}" />
 							</p:selectOneMenu>
-							<p:message for="sexo" />
 
 							<p:outputLabel for="data" value="Data de nascimento: " />
-							<p:calendar label="Data de nascimento" value="#{professorController.professor.dataNascimento}" id="data"
-								validator="#{verificarDataNascimentoPessoaValidator.validate}"
+							<p:calendar label="Data de nascimento"
+								value="#{professorController.professor.dataNascimento}"
+								id="data" validator="#{verificarDataNascimentoPessoaValidator.validate}"
 								pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo"
 								readonlyInput="true" navigator="true">
 							</p:calendar>
-							<p:message for="data" />
 
 							<p:outputLabel for="ano" value="Ano de admissão: " />
-							<p:calendar label="Ano de admissão" id="ano" value="#{professorController.professor.anoAdmissao}"
+							<p:calendar label="Ano de admissão" id="ano"
+								value="#{professorController.professor.anoAdmissao}"
 								validator="#{verificarDataAdmissaoValidator.validate}"
 								pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo"
 								readonlyInput="true" navigator="true">
 							</p:calendar>
-							<p:message for="ano" />
-							
+
 							<p:outputLabel for="perfil" value="Tipo Perfil: " />
-							<p:selectOneMenu id="perfil" label="Tipo Perfil" value="#{professorController.professor.tipoPerfil}">
+							<p:selectOneMenu id="perfil" label="Tipo Perfil"
+								value="#{professorController.professor.tipoPerfil}">
 								<f:selectItem itemLabel="Selecione" />
-								<f:selectItems value="#{professorController.perfil}" var="perfil"
-									itemLabel="#{perfil.descricao}" itemValue="#{perfil}" />
+								<f:selectItems value="#{professorController.perfil}"
+									var="perfil" itemLabel="#{perfil.descricao}"
+									itemValue="#{perfil}" />
 							</p:selectOneMenu>
-							<p:message for="perfil" />
 
 							<p:outputLabel for="hora" value="Horas: " />
-							<p:inputText converter="javax.faces.Integer" label="Horas" size="5"
-								id="hora" value="#{professorController.professor.qtdHoras}" />
-							<p:message for="hora" />
+							<p:inputText converter="javax.faces.Integer" label="Horas"
+								size="5" id="hora"
+								value="#{professorController.professor.qtdHoras}" />
 
 						</h:panelGrid>
 					</p:tab>
 
 					<p:tab title="Graduação">
-						<h:panelGrid columns="3" style="text-align: center">
-							
+						<h:panelGrid columns="2" style="text-align: center">
+
 							<p:outputLabel for="nomeGraduacao" value="Nome da Graduação: " />
 							<p:inputText label="Nome da Graduação" id="nomeGraduacao"
-								value="#{professorController.professor.graduacao.nomeGraduacao}"/>
-							<p:message for="nomeGraduacao" />
+								value="#{professorController.professor.graduacao.nomeGraduacao}" />
 
 							<p:outputLabel for="dataFormacao" value="Data de formação: " />
-							<p:calendar label="Data de formação" id="dataFormacao" value="#{professorController.professor.graduacao.dataFormacao}"
+							<p:calendar label="Data de formação" id="dataFormacao"
+								value="#{professorController.professor.graduacao.dataFormacao}"
 								pattern="dd/MM/yyyy" timeZone="America/Sao_Paulo"
 								readonlyInput="true" navigator="true">
 							</p:calendar>
-							<p:message for="dataFormacao" />					
+								
+							<p:commandButton value="Novo" action="#{professorController.novo}"
+								ajax="false" update="@form" style="width:100%" >
+								<o:skipValidators />
+							</p:commandButton>
+								
+							<p:commandButton value="Cadastrar Professor" style="width:100%;"
+								action="#{professorController.cadastrar}" ajax="false" update="@form" />	
 
 						</h:panelGrid>
-						
-						<div style="margin-top:10px;" align="center">
-								<p:commandButton value="Cadastrar Professor"
-								ajax="false" process="@form" action="#{professorController.cadastrar}"></p:commandButton>
-							</div>
-							
-							<div style="margin-top: 10px;" align="center" >
-								<p:commandButton value="Limpar formulário" immediate="true"
-								ajax="false" process="@form" action="#{professorController.limparFormulario}"></p:commandButton>
-							</div>
-						
+
 					</p:tab>
 				</p:tabView>
 			</div>
@@ -115,6 +117,6 @@
 		</h:form>
 
 	</ui:define>
-	
-	</ui:composition>
+
+</ui:composition>
 </html>

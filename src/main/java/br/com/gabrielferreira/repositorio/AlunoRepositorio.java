@@ -1,12 +1,8 @@
 package br.com.gabrielferreira.repositorio;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -20,31 +16,28 @@ import org.apache.commons.lang3.StringUtils;
 import br.com.gabrielferreira.entidade.Aluno;
 import br.com.gabrielferreira.entidade.Turma;
 import br.com.gabrielferreira.entidade.dto.relatorio.AlunoRelDTO;
+import br.com.gabrielferreira.repositorio.generico.RepositorioGenerico;
 import br.com.gabrielferreira.search.AlunoSearch;
 
-public class AlunoRepositorio implements Serializable{
+public class AlunoRepositorio extends RepositorioGenerico<Aluno>{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	//@Inject
-	private EntityManager entityManager;
-	
-	public AlunoRepositorio() {}
-	
 	public List<Aluno> filtrar(AlunoSearch alunoSearch){
-		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
 		
 		CriteriaQuery<Aluno> criteriaQuery = criteriaBuilder.createQuery(Aluno.class);
 		Root<Aluno> root = criteriaQuery.from(Aluno.class);
 		
 		List<Predicate> predicatesFiltros = criarFiltroAluno(alunoSearch, criteriaBuilder, root);
 		
+		criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
 		criteriaQuery.where((Predicate[])predicatesFiltros.toArray(new Predicate[0]));
 		
-		TypedQuery<Aluno> typedQuery = entityManager.createQuery(criteriaQuery);
+		TypedQuery<Aluno> typedQuery = getEntityManager().createQuery(criteriaQuery);
 
 		List<Aluno> alunos = typedQuery.getResultList();
 		return alunos;
@@ -89,35 +82,35 @@ public class AlunoRepositorio implements Serializable{
 
 	public List<Aluno> verificarAlunoId(Integer id){
 		String jpql = "SELECT a FROM Aluno a where a.id = :id";
-		TypedQuery<Aluno> query = entityManager.createQuery(jpql,Aluno.class);
+		TypedQuery<Aluno> query = getEntityManager().createQuery(jpql,Aluno.class);
 		query.setParameter("id", id);
 		return query.getResultList();
 	}
 	
 	public boolean verificarNumero(String numero){
 		String jpql = "SELECT a FROM Aluno a where a.numeroMatricula = :numero";
-		TypedQuery<Aluno> query = entityManager.createQuery(jpql,Aluno.class);
+		TypedQuery<Aluno> query = getEntityManager().createQuery(jpql,Aluno.class);
 		query.setParameter("numero", numero);
 		
 		List<Aluno> alunos = query.getResultList();
 		
-		return !alunos.isEmpty()?true:false;
+		return !alunos.isEmpty() ? true : false;
 	}
 	
 	public boolean verificarNumeroAtualizado(String numero, Integer id){
 		String jpql = "SELECT a FROM Aluno a where a.numeroMatricula = :numero and a.id <> :id";
-		TypedQuery<Aluno> query = entityManager.createQuery(jpql,Aluno.class);
+		TypedQuery<Aluno> query = getEntityManager().createQuery(jpql,Aluno.class);
 		query.setParameter("numero", numero);
 		query.setParameter("id", id);
 		
 		List<Aluno> alunos = query.getResultList();
 		
-		return !alunos.isEmpty()?true:false;
+		return !alunos.isEmpty() ? true : false;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<AlunoRelDTO> listarAlunosRelatorio(String nome, String sexo, String turma){
-		Query query = entityManager.createNamedQuery("Aluno.findListarAlunos");
+		Query query = getEntityManager().createNamedQuery("Aluno.findListarAlunos");
 		query.setParameter("nome", "%"+nome+"%");
 		query.setParameter("sexo", "%"+sexo+"%");
 		query.setParameter("turma", "%"+turma+"%");

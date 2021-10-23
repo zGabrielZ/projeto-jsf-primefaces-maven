@@ -33,39 +33,29 @@
 				paginatorPosition="bottom"
 				emptyMessage="Sua consulta não retornou registros.">
 
-				<p:inputText id="codigo" value="#{telefone.id}"
-					label="Código" type="hidden" />
-
 				<p:column style="width:80px;">
 					<f:facet name="header">DDD</f:facet>
-					<h:outputText value="#{telefone.ddd}" rendered="#{not telefone.editarTelefone}" />
-					<p:inputText  value="#{telefoneController.telefone.ddd}" maxlength="3" size="3" validator="#{verificarDDDValidator.validate}" rendered="#{telefone.editarTelefone}" 
-						label="DDD" id="ddd" />
+					<h:outputText value="#{telefone.ddd}" />
 				</p:column>
 
 				<p:column style="width:130px;">
 					<f:facet name="header">Número</f:facet>
-					<h:outputText value="#{telefone.numero}" rendered="#{not telefone.editarTelefone}"  />
-					<p:inputMask  value="#{telefoneController.telefone.numero}" mask="99999-9999" size="9" maxlength="9" rendered="#{telefone.editarTelefone}" 
-						label="Número" id="numero" />
+					<h:outputText value="#{telefone.numero}" />
 				</p:column>
 				
 				<p:column style="width:100px;" >
 					<f:facet name="header">Editar</f:facet>
-					<p:commandButton icon="fa fa-pencil"
-						action="#{telefoneController.editarTelefone(telefone)}" rendered="#{not telefone.editarTelefone}"
-						update="dataTableTelefones" process="@this" title="Editar este telefone" >
-					</p:commandButton> 
-					<p:commandButton icon="fa fa-refresh"  action="#{telefoneController.cadastrar}" ajax="false" 
-						update="dataTableTelefones" title="Atualizar" process="@form" rendered="#{telefone.editarTelefone}" />
-					<p:commandButton icon="fa fa-backward"  action="#{telefoneController.cancelar}" ajax="false" 
-						update="dataTableTelefones" title="Cancelar" process="@this" rendered="#{telefone.editarTelefone}" />
+					<p:commandButton title="Editar este telefone" icon="fa fa-pencil"  
+						process="@this" update="@form" action="CadastroTelefone">
+						<f:param name="codigoAtualizarTelefone" value="#{telefone.id}" />
+						<f:param name="codigoAtualizarTelefonePessoa" value="#{telefone.pessoa.id}" />	
+					</p:commandButton>
 				</p:column>
 
 				<p:column style="width:60px;" >
 					<f:facet name="header">Deletar</f:facet>										
 					<p:commandButton onclick="PF('meuDialogo').show();"
-						icon="fa fa-trash" title="Excluir este telefone" rendered="#{not telefone.editarTelefone}" >
+						icon="fa fa-trash" title="Excluir este telefone" >
 						<f:setPropertyActionListener value="#{telefone}"
 							target="#{telefoneController.telefoneSelecionado}"></f:setPropertyActionListener>
 					</p:commandButton> 
@@ -82,7 +72,7 @@
 					action="#{telefoneController.excluirTelefone}"
 					update="dataTableTelefones" ajax="false" process="@form"
 					onclick="meuDialogo.hide()" />
-				<p:commandButton value="Nao" update="dataTableTelefones"
+				<p:commandButton value="Não" update="dataTableTelefones"
 					ajax="false" process="@form" onclick="meuDialogo.hide()" />
 
 			</p:confirmDialog>

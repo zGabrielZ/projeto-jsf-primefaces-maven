@@ -15,7 +15,6 @@ import br.com.gabrielferreira.entidade.Aluno;
 import br.com.gabrielferreira.entidade.Pessoa;
 import br.com.gabrielferreira.entidade.Telefone;
 import br.com.gabrielferreira.exception.RegraDeNegocioException;
-import br.com.gabrielferreira.service.impl.AlunoServiceImpl;
 import br.com.gabrielferreira.service.impl.PessoaServiceImpl;
 import br.com.gabrielferreira.service.impl.TelefoneServiceImpl;
 import br.com.gabrielferreira.utils.FacesMessages;
@@ -38,12 +37,6 @@ public class TelefoneController implements Serializable{
 	private PessoaServiceImpl pessoaServiceImpl;
 	
 	@Inject
-	private AlunoServiceImpl alunoServiceImpl;
-	
-	@Inject
-	private NavegacaoController navegacaoController;
-	
-	@Inject
 	private TelefoneEmail telefoneEmail;
 	
 	@Getter
@@ -64,10 +57,6 @@ public class TelefoneController implements Serializable{
 	
 	@Getter
 	@Setter
-	private boolean editar;
-	
-	@Getter
-	@Setter
 	private boolean enviarEmailTelefoneCadastrado;
 	
 	@Getter
@@ -75,114 +64,95 @@ public class TelefoneController implements Serializable{
 	private boolean enviarEmailTelefoneExcluido;
 	
 	@PostConstruct
-	public void inicializar() {
-		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-		String id = params.get("codigo");
-		pessoa = pessoaServiceImpl.getConsultarDetalhe(Integer.parseInt(id));
+	public void iniciar() {
 		telefone = new Telefone();
-		telefones = telefoneServiceImpl.getTelefonesByIdPessoa(pessoa.getId());
+		verificarParametro();
+	}
+	
+	public void verificarParametro() {
+		Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		String idCodigoConsultaTelefone = params.get("codigoConsultaTelefone");
+		String idCodigoCadastroTelefone = params.get("codigoCadastroTelefone");
+		String idCodigoAtualizarTelefone = params.get("codigoAtualizarTelefone");
+		String idCodigoAtualizarTelefonePessoa = params.get("codigoAtualizarTelefonePessoa");
+		
+		if(idCodigoConsultaTelefone != null) {
+			telefones = telefoneServiceImpl.getTelefonesByIdPessoa(Integer.parseInt(idCodigoConsultaTelefone));
+			pessoa = pessoaServiceImpl.getConsultarDetalhe(Integer.parseInt(idCodigoConsultaTelefone));
+		}
+		
+		if(idCodigoCadastroTelefone != null) {
+			pessoa = pessoaServiceImpl.getConsultarDetalhe(Integer.parseInt(idCodigoCadastroTelefone));
+		}
+		
+		if(idCodigoAtualizarTelefone != null && idCodigoAtualizarTelefonePessoa != null) {
+			telefone = telefoneServiceImpl.getByTelefone(Integer.parseInt(idCodigoAtualizarTelefone));
+			pessoa = pessoaServiceImpl.getConsultarDetalhe(Integer.parseInt(idCodigoAtualizarTelefonePessoa));
+		}
+		
 	}
 	
 	public boolean isVerificarAlunoOuProfessor() {
 		if(pessoa instanceof Aluno) {
-			if(alunoServiceImpl.getConsultarDetalhe(pessoa.getId()) != null) {
-				return true;
-			}
+			return true;
 		}
 		return false;
 	}
+	
+	public void novo() {
+		telefone = new Telefone();
+	}
 
 	public void cadastrar() throws RegraDeNegocioException  {
-		
 		if(telefone.getId() == null) {
-			inserirTelefone(telefone, pessoa);
-			telefone = new Telefone();
+			inserir();
 		} else {
-			atualizarTelefone(telefone);
+			atualizar();
 		}	
 	}
 	
-	private void atualizarTelefone(Telefone telefone) {
+	private void inserir() {
 		try {
-			if(telefone.isEditarTelefone()) {
-				telefone.setEditarTelefone(false);
-			}
-			telefoneServiceImpl.getAtualizarTelefone(telefone);
-			enviarEmailTelefoneCadastrado = false;
-			telefoneEmail.assuntoEmail(telefone);
-			if(isVerificarAlunoOuProfessor()) {
-				FacesMessages.adicionarMensagem("consultaAlunosForm:msg", FacesMessage.SEVERITY_INFO, "Telefone atualizado com sucesso !",
-						null);
-				FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-				navegacaoController.consultaAluno();
-			} else {
-				FacesMessages.adicionarMensagem("consultaProfessoresForm:msg", FacesMessage.SEVERITY_INFO, "Telefone atualizado com sucesso !",
-						null);
-				FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-				navegacaoController.consultaProfessor();
-			}
-		} catch (RegraDeNegocioException e) {
-			telefone.setEditarTelefone(true);
-			FacesMessages.adicionarMensagem("consultaTelefonesForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
+			telefoneServiceImpl.getInserirTelefone(telefone,pessoa);
+			FacesMessages.adicionarMensagem("cadastroTelefoneForm", FacesMessage.SEVERITY_INFO, "Telefone cadastrado com sucesso !",
 					null);
-		}
-	}
-
-	public void excluirTelefone() {
-		try {
-			Telefone telefone = telefoneSelecionado;			
-			telefoneServiceImpl.getRemoverTelefone(telefone);
-			enviarEmailTelefoneExcluido = true;
-			telefoneEmail.assuntoEmail(telefone);
-			if(isVerificarAlunoOuProfessor()) {
-				FacesMessages.adicionarMensagem("consultaAlunosForm:msg", FacesMessage.SEVERITY_INFO, "Telefone removido com sucesso !",
-						null);
-				FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-				navegacaoController.consultaAluno();
-			} else {
-				FacesMessages.adicionarMensagem("consultaProfessoresForm:msg", FacesMessage.SEVERITY_INFO, "Telefone removido com sucesso !",
-						null);
-				FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-				navegacaoController.consultaProfessor();
-			}
-		} catch (Exception e) {
-			FacesMessages.adicionarMensagem("consultaTelefonesForm:msg", FacesMessage.SEVERITY_ERROR, "Não é possível excluir, pois tem entidades relacionada !",
-					"Não é possível excluir !");
-		}
-	}
-	
-	private void inserirTelefone(Telefone telefone, Pessoa pessoa) throws RegraDeNegocioException  {
-		try {
-			telefoneServiceImpl.getInserirTelefone(telefone, pessoa);
+			novo();
 			enviarEmailTelefoneCadastrado = true;
-			telefoneEmail.assuntoEmail(telefone);
-			if(isVerificarAlunoOuProfessor()) {
-				FacesMessages.adicionarMensagem("consultaAlunosForm:msg", FacesMessage.SEVERITY_INFO, "Telefone cadastrado com sucesso !",
-						null);
-				FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-				navegacaoController.consultaAluno();
-			} else {
-				FacesMessages.adicionarMensagem("consultaProfessoresForm:msg", FacesMessage.SEVERITY_INFO, "Telefone cadastrado com sucesso !",
-						null);
-				FacesContext.getCurrentInstance().getExternalContext().getFlash().setKeepMessages(true);
-				navegacaoController.consultaProfessor();
-			}
-			
+			//telefoneEmail.assuntoEmail(telefone);
 		} catch (RegraDeNegocioException e) {
 			FacesMessages.adicionarMensagem("cadastroTelefoneForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
 					null);
 		}
 	}
 	
-	public void cancelar() {
-		editar = false;
-		this.telefone.setEditarTelefone(editar);
+	private void atualizar() {
+		try {
+			telefoneServiceImpl.getAtualizarTelefone(telefone);
+			FacesMessages.adicionarMensagem("cadastroTelefoneForm", FacesMessage.SEVERITY_INFO, "Telefone atualizado com sucesso !",
+					null);
+			novo();
+			enviarEmailTelefoneCadastrado = false;
+			//telefoneEmail.assuntoEmail(telefone);
+		} catch (RegraDeNegocioException e) {
+			FacesMessages.adicionarMensagem("cadastroTelefoneForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
+					null);
+		}
 	}
 	
-	public void editarTelefone(Telefone telefone) {
-		this.telefone = telefone;
-		editar = true;
-		this.telefone.setEditarTelefone(editar);
+	private void consultarTelefoneAposExcluir(Telefone telefone) {
+		Integer idPessoa = telefone.getPessoa().getId();
+		pessoa = pessoaServiceImpl.getConsultarDetalhe(idPessoa);
+		telefones = telefoneServiceImpl.getTelefonesByIdPessoa(idPessoa);
+	}
+	
+	public void excluirTelefone() {
+		Telefone telefone = telefoneSelecionado;			
+		telefoneServiceImpl.getRemoverTelefone(telefone);
+		enviarEmailTelefoneExcluido = true;
+		//telefoneEmail.assuntoEmail(telefone);
+		consultarTelefoneAposExcluir(telefone);
+		FacesMessages.adicionarMensagem("consultaTelefonesForm:msg", FacesMessage.SEVERITY_INFO, "Removido com sucesso !",
+				null);
 	}
 	
 }

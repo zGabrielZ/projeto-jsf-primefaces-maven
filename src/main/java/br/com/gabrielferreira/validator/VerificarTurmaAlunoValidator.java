@@ -7,16 +7,16 @@ import javax.faces.context.FacesContext;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 import javax.inject.Named;
-
-import org.apache.commons.lang3.StringUtils;
 import lombok.Getter;
 import lombok.Setter;
 
 import com.sun.faces.util.MessageFactory;
 
+import br.com.gabrielferreira.entidade.Turma;
+
 @Named
 @RequestScoped
-public class VerificarNumeroAlunoValidator implements Validator {
+public class VerificarTurmaAlunoValidator implements Validator {
 	
 	@Getter
 	@Setter
@@ -28,18 +28,13 @@ public class VerificarNumeroAlunoValidator implements Validator {
 	
 	@Override
 	public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-		String numero = (String) value;
+		Turma turma = (Turma) value;
 		
 		Object label = MessageFactory.getLabel(context, component);
 		
-		if(numero.isEmpty()) {
-			descricaoErro = label + ": Não é possível cadastrar este número, pois é preciso ser informado !";
-			descricaoCampo = "Por favor informe o número novamente !";
-			FacesMessage facesMessage = new FacesMessage();
-			validarMsgErro(descricaoErro, descricaoCampo, facesMessage);
-		} else if (numero != null && !StringUtils.isNumeric(numero)) {
-			descricaoErro = label + ": Não é possível cadastrar este número, pois tem que ser númerico !";
-			descricaoCampo = "Por favor informe o número novamente !";
+		if(turma == null) {
+			descricaoErro = label + ": Não é possível cadastrar esta turma, pois é preciso ser informado !";
+			descricaoCampo = "Por favor informe a turma novamente !";
 			FacesMessage facesMessage = new FacesMessage();
 			validarMsgErro(descricaoErro, descricaoCampo, facesMessage);
 		}

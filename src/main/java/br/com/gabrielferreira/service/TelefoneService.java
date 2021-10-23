@@ -12,7 +12,9 @@ public interface TelefoneService {
 
 	void getInserirTelefone(Telefone telefone, Pessoa pessoa) throws RegraDeNegocioException;
 	
-	void getAtualizarTelefone(Telefone telefone) throws RegraDeNegocioException;
+	Telefone getAtualizarTelefone(Telefone telefone) throws RegraDeNegocioException;
+	
+	Telefone getByTelefone(Integer id);
 	
 	void getRemoverTelefone(Telefone telefone);
 	

@@ -144,10 +144,6 @@ public class TurmaController implements Serializable{
 		turmaSearchParam = new TurmaSearch();
 		consultar();
 	}
-	
-	public List<Turma> getTurmasConsultaAlunos(){
-		return turmaServiceImpl.getListarTurmas();
-	}
 
 	public Turno[] getTurno() {
 		return Turno.values();

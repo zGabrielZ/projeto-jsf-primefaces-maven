@@ -83,24 +83,32 @@
 							
 				<p:column style="width:70px;" >
 					<f:facet name="header">Editar</f:facet>
-					<p:commandButton icon="fa fa-pencil"
-						action="#{professorController.editarProfessor(professor)}"
-						update="dataTableProfessores" process="@this" title="Editar este professor" >
-					</p:commandButton> 
+					<p:commandButton title="Editar este professor" icon="fa fa-pencil"  
+						process="@this" update="@form" action="CadastroProfessor">
+						<f:param name="codigoAtualizarProfessor" value="#{professor.id}" />	
+					</p:commandButton>
 				</p:column>
 				
-				<p:column style="width:90px;">
+				<p:column style="width:100px;">
 					<f:facet name="header">Telefone</f:facet>
-					<p:commandButton title="Adicionar Telefone" icon="fa fa-phone"
-						process="@this" action="#{professorController.selecionarTelefone(professor)}" >
+					<p:commandButton title="Adicionar Telefones" icon="fa fa-phone"
+						action="/telefone/CadastroTelefone"
+						process="@this" update="@form">
+						<f:param name="codigoCadastroTelefone" value="#{professor.id}" />	
 					</p:commandButton>
-					<p:commandButton title="Consultar Telefones" action="#{professorController.selecionarConsultaTelefone(professor)}" icon="fa fa-search-plus" ></p:commandButton>
+					<p:commandButton title="Consultar Telefones" 
+						action="/telefone/ConsultaTelefone" icon="fa fa-search-plus" 
+						process="@this" update="@form" style="margin-left:5px;" >
+						<f:param name="codigoConsultaTelefone" value="#{professor.id}" />	
+					</p:commandButton>
 				</p:column>
 				
 				<p:column style="width:60px;" >
 					<f:facet name="header">Detalhe</f:facet>
-					<p:commandButton title="Detalhe do professor" icon="fa fa-search" 
-						process="@this" action="#{professorController.selecionarProfessor(professor)}"></p:commandButton>
+					<p:commandButton title="Detalhe do professor" icon="fa fa-search"  
+						process="@this" update="@form" action="DetalheProfessor">
+						<f:param name="codigoDetalheProfessor" value="#{professor.id}" />	
+					</p:commandButton>
 				</p:column>
 				
 				<p:column style="width:60px;" >
@@ -126,7 +134,7 @@
 					action="#{professorController.excluirProfessor}"
 					update="dataTableProfessores" ajax="false" process="@form"
 					onclick="meuDialogo.hide()" />
-				<p:commandButton value="Nao" update="dataTableProfessores"
+				<p:commandButton value="Não" update="dataTableProfessores"
 					ajax="false" process="@form" onclick="meuDialogo.hide()" />
 
 			</p:confirmDialog>

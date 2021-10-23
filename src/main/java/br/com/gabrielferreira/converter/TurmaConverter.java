@@ -22,7 +22,7 @@ public class TurmaConverter implements Converter{
 		Turma turma = null;
 		
 		if(value != null) {
-			if(value.equals("Selecione")) {
+			if(value.contains("Selecione")) {
 				return null;
 			} else {
 				turma = turmaServiceImpl.getById(new Integer(value));

@@ -12,35 +12,6 @@
   </welcome-file-list>
   
   <filter>
-  	<filter-name>AlunoFilter</filter-name>
-  	<filter-class>br.com.gabrielferreira.filter.AlunoFilter</filter-class>
-  </filter>
-  <filter-mapping>
-  	<filter-name>AlunoFilter</filter-name>
-  	<url-pattern>/aluno/detalhe/*</url-pattern>
-  	<url-pattern>/aluno/atualizar/*</url-pattern>
-  </filter-mapping>
-  
-  <filter>
-  	<filter-name>TelefoneFilter</filter-name>
-  	<filter-class>br.com.gabrielferreira.filter.TelefoneFilter</filter-class>
-  </filter>
-  <filter-mapping>
-  	<filter-name>TelefoneFilter</filter-name>
-  	<url-pattern>/telefone/*</url-pattern>
-  </filter-mapping>
-  
-  <filter>
-  	<filter-name>ProfessorFilter</filter-name>
-  	<filter-class>br.com.gabrielferreira.filter.ProfessorFilter</filter-class>
-  </filter>
-  <filter-mapping>
-  	<filter-name>ProfessorFilter</filter-name>
-  	<url-pattern>/professor/detalhe/*</url-pattern>
-  	<url-pattern>/professor/atualizar/*</url-pattern>
-  </filter-mapping>
-  
-  <filter>
   	<filter-name>LoginFilter</filter-name>
   	<filter-class>br.com.gabrielferreira.filter.LoginFilter</filter-class>
   </filter>

@@ -45,7 +45,7 @@
 						<p:selectOneMenu style="margin-left:30px;"  id="turma" value="#{alunoController.alunoSearchParam.turma}" label="Turma"
 							converter="#{turmaConverter}" >
 							<f:selectItem itemLabel="Selecione" />
-							<f:selectItems value="#{turmaController.turmasConsultaAlunos}" var="turma" itemLabel="#{turma.nomeTurma}" 
+							<f:selectItems value="#{alunoController.turmasConsultaAlunos}" var="turma" itemLabel="#{turma.nomeTurma}" 
 								itemValue="#{turma}"/>
 						</p:selectOneMenu>
 						
@@ -62,7 +62,7 @@
 		<ui:define name="conteudo" >
 			<h:form id="consultaAlunosForm" >
 			<p:messages id="msg" autoUpdate="true"  />
-			<p:dataTable id="dataTableAlunos" value="#{alunoController.alunos}" lazy="true"
+			<p:dataTable id="dataTableAlunos" value="#{alunoController.alunos}"
 				var="aluno" style="padding-top:20px;" rows="5" paginator="true" paginatorPosition="bottom"
 					emptyMessage="Sua consulta não retornou registros." rowsPerPageTemplate="5, 10, 25, 50, 100" paginatorAlwaysVisible="false" >
 				
@@ -92,24 +92,32 @@
 							
 				<p:column style="width:100px;">
 					<f:facet name="header">Telefone</f:facet>
-					<p:commandButton title="Adicionar Telefone" icon="fa fa-phone"
-						process="@this" action="#{alunoController.selecionarTelefone(aluno)}" >
+					<p:commandButton title="Adicionar Telefones" icon="fa fa-phone"
+						action="/telefone/CadastroTelefone"
+						process="@this" update="@form">
+						<f:param name="codigoCadastroTelefone" value="#{aluno.id}" />	
 					</p:commandButton>
-					<p:commandButton title="Consultar Telefones" action="#{alunoController.selecionarConsultaTelefone(aluno)}" icon="fa fa-search-plus" ></p:commandButton>
+					<p:commandButton title="Consultar Telefones" 
+						action="/telefone/ConsultaTelefone" icon="fa fa-search-plus" 
+						process="@this" update="@form" style="margin-left:5px;" >
+						<f:param name="codigoConsultaTelefone" value="#{aluno.id}" />	
+					</p:commandButton>
 				</p:column>
 				
 				<p:column style="width:60px;" >
 					<f:facet name="header">Detalhe</f:facet>
-					<p:commandButton title="Detalhe do aluno" icon="fa fa-search" 
-						process="@this" action="#{alunoController.selecionarAluno(aluno)}"></p:commandButton>
+					<p:commandButton title="Detalhe do aluno" icon="fa fa-search"  
+						process="@this" update="@form" action="DetalheAluno">
+						<f:param name="codigoDetalheAluno" value="#{aluno.id}" />	
+					</p:commandButton>
 				</p:column>
 				
 				<p:column style="width:100px;" >
 					<f:facet name="header">Editar</f:facet>
-					<p:commandButton icon="fa fa-pencil"
-						action="#{alunoController.editarAluno(aluno)}"
-						update="dataTableAlunos" process="@this" title="Editar este aluno" >
-					</p:commandButton> 
+					<p:commandButton title="Editar este aluno" icon="fa fa-pencil"  
+						process="@this" update="@form" action="CadastroAluno">
+						<f:param name="codigoAtualizarAluno" value="#{aluno.id}" />	
+					</p:commandButton>
 				</p:column>
 
 				<p:column style="width:60px;" >
@@ -132,7 +140,7 @@
 					action="#{alunoController.excluirAluno}"
 					update="dataTableAlunos" ajax="false" process="@form"
 					onclick="meuDialogo.hide()" />
-				<p:commandButton value="Nao" update="dataTableAlunos"
+				<p:commandButton value="Não" update="dataTableAlunos"
 					ajax="false" process="@form" onclick="meuDialogo.hide()" />
 
 			</p:confirmDialog>
