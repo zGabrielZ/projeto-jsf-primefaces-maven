@@ -22,6 +22,8 @@ import lombok.Setter;
 
 @Named
 @ViewScoped
+@Getter
+@Setter
 public class EventoController implements Serializable{
 
 	/**
@@ -41,16 +43,10 @@ public class EventoController implements Serializable{
 	@Inject
 	private EventoEmail eventoEmail;
 	
-	@Getter
-	@Setter
 	private List<ItensTurma> itensTurmas;
 	
-	@Getter
-	@Setter
 	private ItensTurma itensTurma;
-	
-	@Getter
-	@Setter
+
 	private ItensTurma itensTurmaSelecionado;
 	
 	@PostConstruct
@@ -59,22 +55,24 @@ public class EventoController implements Serializable{
 		itensTurmas = itensTurmasServiceImpl.getListarItensTurmas();
 	}
 	
-	public void cadastrar() {
-		
-		if(itensTurma.getId() == null) {
-			inserirItens(itensTurma);
-			itensTurma = new ItensTurma();
-		}
-			
+	public void novo() {
+		itensTurma = new ItensTurma();
 	}
 	
-	private void inserirItens(ItensTurma itensTurma) {
+	public void cadastrar() {
+		if(itensTurma.getId() == null) {
+			inserirItens();
+		}	
+	}
+	
+	private void inserirItens() {
 		try {
 			itensTurmasServiceImpl.getInserirItensTurmas(itensTurma);
 			inicializar();
 			FacesMessages.adicionarMensagem("adicionarEventoForm:msg", FacesMessage.SEVERITY_INFO, "Cadastrado com sucesso !",
 					null);
-			eventoEmail.assuntoEmail(itensTurma);
+			novo();
+			//eventoEmail.assuntoEmail(itensTurma);
 		} catch (RegraDeNegocioException e) {
 			FacesMessages.adicionarMensagem("adicionarEventoForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
 					null);
@@ -82,17 +80,12 @@ public class EventoController implements Serializable{
 	}
 	
 	public void excluirItensTurmas() {
-		try {
-			ItensTurma itensTurma = itensTurmaSelecionado;			
-			itensTurmasServiceImpl.getRemoverItensTurmas(itensTurma);
-			inicializar();
-			FacesMessages.adicionarMensagem("adicionarEventoForm:msg", FacesMessage.SEVERITY_INFO, "Removido com sucesso !",
-					null);
-			eventoEmail.assuntoEmailItensTurmaExcluido(itensTurma);
-		} catch (Exception e) {
-			FacesMessages.adicionarMensagem("adicionarEventoForm:msg", FacesMessage.SEVERITY_ERROR, "Não é possível excluir, pois tem entidades relacionada !",
-					"Não é possível excluir !");
-		}
+		ItensTurma itensTurma = itensTurmaSelecionado;			
+		itensTurmasServiceImpl.getRemoverItensTurmas(itensTurma);
+		inicializar();
+		FacesMessages.adicionarMensagem("adicionarEventoForm:msg", FacesMessage.SEVERITY_INFO, "Removido com sucesso !",
+				null);
+		//eventoEmail.assuntoEmailItensTurmaExcluido(itensTurma);
 	}
 	
 	public List<Turma> getTurmas(){

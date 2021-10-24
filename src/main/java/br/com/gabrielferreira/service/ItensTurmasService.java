@@ -12,10 +12,6 @@ public interface ItensTurmasService {
 		
 	List<ItensTurma> getListarItensTurmas();
 	
-	List<ItensTurma> getListarItensTurmasByProfessor(Integer idProfessor);
-	
-	List<ItensTurma> getListarItensTurmasByTurma(Integer idTurma);
-	
 	void getVerificarProfessorAndTurmaRepetido(ItensTurma itensTurma) throws RegraDeNegocioException;
 	
 }

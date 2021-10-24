@@ -21,7 +21,7 @@ public class PessoaConverter implements Converter{
 		Pessoa pessoa = null;
 		
 		if(value != null) {
-			if(value.equals("Selecione")) {
+			if(value.contains("Selecione")) {
 				return null;
 			} else {
 				pessoa = pessoaServiceImpl.getConsultarDetalhe(new Integer(value));

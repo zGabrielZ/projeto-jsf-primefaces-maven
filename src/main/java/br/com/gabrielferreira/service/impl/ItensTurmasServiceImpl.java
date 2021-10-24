@@ -28,7 +28,7 @@ public class ItensTurmasServiceImpl implements Serializable,ItensTurmasService{
 
 	@Override
 	public void getRemoverItensTurmas(ItensTurma itensTurma) {
-		itensTurmasRepositorio.remover(itensTurma);
+		itensTurmasRepositorio.deletarPorId(ItensTurma.class, itensTurma.getId());
 	}
 
 	@Override
@@ -43,19 +43,5 @@ public class ItensTurmasServiceImpl implements Serializable,ItensTurmasService{
 			throw new RegraDeNegocioException("Não é possível cadastrar com essa turma, pois já tem esse relacionamento");
 		}
 	}
-
-	@Override
-	public List<ItensTurma> getListarItensTurmasByProfessor(Integer idProfessor) {
-		List<ItensTurma> itensTurmas = itensTurmasRepositorio.listarItensTurmasByProfessor(idProfessor);
-		return itensTurmas;
-	}
-
-	@Override
-	public List<ItensTurma> getListarItensTurmasByTurma(Integer idTurma) {
-		List<ItensTurma> itensTurmas = itensTurmasRepositorio.listarItensTurmasByTurma(idTurma);
-		return itensTurmas;
-	}
-
-	
 
 }

@@ -1,25 +1,20 @@
 package br.com.gabrielferreira.repositorio;
-
-import java.io.Serializable;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import br.com.gabrielferreira.entidade.ItensTurma;
 import br.com.gabrielferreira.entidade.Pessoa;
 import br.com.gabrielferreira.entidade.Professor;
 import br.com.gabrielferreira.entidade.Turma;
-public class ItensTurmasRepositorio implements Serializable{
+import br.com.gabrielferreira.repositorio.generico.RepositorioGenerico;
+public class ItensTurmasRepositorio extends RepositorioGenerico<ItensTurma>{
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
-	//@Inject
-	private EntityManager entityManager;
 	
 	@Inject
 	private PessoaRepositorio pessoaRepositorio;
@@ -29,7 +24,9 @@ public class ItensTurmasRepositorio implements Serializable{
 	
 	public ItensTurmasRepositorio() {}
 	
+	@Override
 	public void inserir(ItensTurma itensTurma) {
+		getEntityManager().getTransaction().begin();
 		Pessoa pessoa = pessoaRepositorio.pesquisarPorId(itensTurma.getProfessor().getId(), Pessoa.class);
 		Turma turma = turmaRepositorio.pesquisarPorId(itensTurma.getTurma().getId(), Turma.class);
 		
@@ -37,41 +34,19 @@ public class ItensTurmasRepositorio implements Serializable{
 		professor.getItensTurmas().add(itensTurma);
 		turma.getItensTurmas().add(itensTurma);
 		
-		entityManager.persist(itensTurma);
-	}
-	
-	public ItensTurma procurarPorId(Integer id) {
-		return entityManager.find(ItensTurma.class, id);
-	}
-	
-	public void remover(ItensTurma itensTurma) {
-		itensTurma = procurarPorId(itensTurma.getId());
-		entityManager.remove(itensTurma);
+		getEntityManager().persist(itensTurma);
+		getEntityManager().getTransaction().commit();
 	}
 	
 	public List<ItensTurma> listarItensTurmas(){
-		String jpql = "SELECT i FROM ItensTurma i join i.professor p join i.turma t";
-		TypedQuery<ItensTurma> query = entityManager.createQuery(jpql,ItensTurma.class);
-		return query.getResultList();
-	}
-	
-	public List<ItensTurma> listarItensTurmasByProfessor(Integer idProfessor){
-		String jpql = "SELECT i FROM ItensTurma i join i.professor p where p.id = :idProfessor";
-		TypedQuery<ItensTurma> query = entityManager.createQuery(jpql,ItensTurma.class);
-		query.setParameter("idProfessor", idProfessor);
-		return query.getResultList();
-	}
-	
-	public List<ItensTurma> listarItensTurmasByTurma(Integer idTurma){
-		String jpql = "SELECT i FROM ItensTurma i join i.turma t where t.id = :idTurma";
-		TypedQuery<ItensTurma> query = entityManager.createQuery(jpql,ItensTurma.class);
-		query.setParameter("idTurma", idTurma);
+		String jpql = "SELECT i FROM ItensTurma i join i.professor p join i.turma t order by i.id desc";
+		TypedQuery<ItensTurma> query = getEntityManager().createQuery(jpql,ItensTurma.class);
 		return query.getResultList();
 	}
 	
 	public boolean verificarProfessorAndTurmaRepetido(Integer idProfessor, Integer idTurma){
 		String jpql = "SELECT i FROM ItensTurma i join i.professor p join i.turma t where p.id = :idProfessor and i.id = :idTurma";
-		TypedQuery<ItensTurma> query = entityManager.createQuery(jpql,ItensTurma.class);
+		TypedQuery<ItensTurma> query = getEntityManager().createQuery(jpql,ItensTurma.class);
 		query.setParameter("idProfessor", idProfessor);
 		query.setParameter("idTurma", idTurma);
 		
