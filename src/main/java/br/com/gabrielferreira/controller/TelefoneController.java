@@ -9,11 +9,13 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpSession;
 
 import br.com.gabrielferreira.email.TelefoneEmail;
 import br.com.gabrielferreira.entidade.Aluno;
 import br.com.gabrielferreira.entidade.Pessoa;
 import br.com.gabrielferreira.entidade.Telefone;
+import br.com.gabrielferreira.entidade.Usuario;
 import br.com.gabrielferreira.exception.RegraDeNegocioException;
 import br.com.gabrielferreira.service.impl.PessoaServiceImpl;
 import br.com.gabrielferreira.service.impl.TelefoneServiceImpl;
@@ -116,9 +118,9 @@ public class TelefoneController implements Serializable{
 			telefoneServiceImpl.getInserirTelefone(telefone,pessoa);
 			FacesMessages.adicionarMensagem("cadastroTelefoneForm", FacesMessage.SEVERITY_INFO, "Telefone cadastrado com sucesso !",
 					null);
-			novo();
 			enviarEmailTelefoneCadastrado = true;
-			//telefoneEmail.assuntoEmail(telefone);
+			telefoneEmail.assuntoEmail(telefone,obterEmailUsuarioLogado());
+			novo();
 		} catch (RegraDeNegocioException e) {
 			FacesMessages.adicionarMensagem("cadastroTelefoneForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
 					null);
@@ -130,9 +132,9 @@ public class TelefoneController implements Serializable{
 			telefoneServiceImpl.getAtualizarTelefone(telefone);
 			FacesMessages.adicionarMensagem("cadastroTelefoneForm", FacesMessage.SEVERITY_INFO, "Telefone atualizado com sucesso !",
 					null);
-			novo();
 			enviarEmailTelefoneCadastrado = false;
-			//telefoneEmail.assuntoEmail(telefone);
+			telefoneEmail.assuntoEmail(telefone,obterEmailUsuarioLogado());
+			novo();
 		} catch (RegraDeNegocioException e) {
 			FacesMessages.adicionarMensagem("cadastroTelefoneForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
 					null);
@@ -146,13 +148,27 @@ public class TelefoneController implements Serializable{
 	}
 	
 	public void excluirTelefone() {
-		Telefone telefone = telefoneSelecionado;			
+		Telefone telefone = telefoneSelecionado;	
+		Telefone dadosTelefone = getDados(telefone.getId());
 		telefoneServiceImpl.getRemoverTelefone(telefone);
 		enviarEmailTelefoneExcluido = true;
-		//telefoneEmail.assuntoEmail(telefone);
+		telefoneEmail.assuntoEmail(dadosTelefone,obterEmailUsuarioLogado());
 		consultarTelefoneAposExcluir(telefone);
 		FacesMessages.adicionarMensagem("consultaTelefonesForm:msg", FacesMessage.SEVERITY_INFO, "Removido com sucesso !",
 				null);
+	}
+	
+	private Telefone getDados(Integer id) {
+		Telefone telefone = new Telefone();
+		telefone = telefoneServiceImpl.getByTelefone(id);
+		return telefone;
+	}
+	
+	private String obterEmailUsuarioLogado() {
+		HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance().getExternalContext()
+				.getSession(false);
+		Usuario usuario = (Usuario) httpSession.getAttribute("usuarioLogado");
+		return usuario.getEmail();
 	}
 	
 }

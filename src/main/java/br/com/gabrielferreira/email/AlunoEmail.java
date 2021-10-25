@@ -7,8 +7,9 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import br.com.gabrielferreira.controller.AlunoController;
-import br.com.gabrielferreira.email.EmailConfig;
+import br.com.gabrielferreira.email.config.EmailConfig;
 import br.com.gabrielferreira.entidade.Aluno;
+import br.com.gabrielferreira.entidade.Email;
 
 public class AlunoEmail implements Serializable{
 
@@ -23,7 +24,9 @@ public class AlunoEmail implements Serializable{
 	@Inject
 	private AlunoController alunoController;
 	
-	public void assuntoEmail(Aluno aluno) {
+	public void assuntoEmail(Aluno aluno, String emailDestino) {
+		
+		Email email = new Email();
 		
 		StringBuilder stringBuilder = new StringBuilder();
 		
@@ -32,10 +35,10 @@ public class AlunoEmail implements Serializable{
 		
 		if(alunoController.isEnviarEmailAlunoCadatrado()) {
 			stringBuilder.append("<h1 style=\"size: 15px; text-align: center; font-family: sans-serif; \" >Aluno cadastrado com sucesso !</h1> <br/> ");
-			emailConfig.setAssunto("Aluno Cadastrado");
+			email.setTitulo("Aluno Cadastrado");
 		} else {
 			stringBuilder.append("<h1 style=\"size: 15px; text-align: center; font-family: sans-serif; \" >Aluno atualizado com sucesso !</h1> <br/> ");
-			emailConfig.setAssunto("Aluno Atualizado");
+			email.setTitulo("Aluno Atualizado");
 		}
 		
 		stringBuilder.append("<p style=\"text-align: center;\" > Dados do aluno abaixo:</p> <br/> ");
@@ -47,19 +50,24 @@ public class AlunoEmail implements Serializable{
 		stringBuilder.append("<p style=\"text-align: center;\" > Turma : " + aluno.getTurma().getNomeTurma() +"</p> <br/> ");
 		stringBuilder.append("<p style=\"text-align: center;\" > Turno : " + aluno.getTurma().getTurno().getDescricao() +"</p> <br/> ");
 		
-		emailConfig.setTexto(stringBuilder.toString());
-		emailConfig.enviarEmail(true);
+		email.getDestinatarios().add(emailDestino);
+		email.setAssunto(stringBuilder.toString());
+		emailConfig.enviarEmail(email);
 	}
 	
-	public void assuntoEmailAlunoExcluido(Aluno aluno) {
+	public void assuntoEmailAlunoExcluido(Aluno aluno, String emailDestino) {
+		
+		Email email = new Email();
+		
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("<h1 style=\"size: 15px; text-align: center; font-family: sans-serif; \" >Aluno deletado com sucesso !</h1> <br/> ");
 		stringBuilder.append("<p style=\"text-align: center;\" > Nome : " + aluno.getNomeCompleto() +"</p> <br/> ");
 		stringBuilder.append("<p style=\"text-align: center;\" > CPF : " + aluno.getCpf() +"</p> <br/> ");
 		
-		emailConfig.setAssunto("Aluno Deletado");
-		emailConfig.setTexto(stringBuilder.toString());
-		emailConfig.enviarEmail(true);
+		email.setTitulo("Aluno Deletado");
+		email.getDestinatarios().add(emailDestino);
+		email.setAssunto(stringBuilder.toString());
+		emailConfig.enviarEmail(email);
 	}
 
 }

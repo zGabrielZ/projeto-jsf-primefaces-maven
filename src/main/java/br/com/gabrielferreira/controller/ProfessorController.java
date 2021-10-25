@@ -10,10 +10,12 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.RollbackException;
+import javax.servlet.http.HttpSession;
 
 import br.com.gabrielferreira.email.ProfessorEmail;
 import br.com.gabrielferreira.entidade.Graduacao;
 import br.com.gabrielferreira.entidade.Professor;
+import br.com.gabrielferreira.entidade.Usuario;
 import br.com.gabrielferreira.entidade.enums.Sexo;
 import br.com.gabrielferreira.entidade.enums.TipoPerfil;
 import br.com.gabrielferreira.exception.RegraDeNegocioException;
@@ -107,9 +109,9 @@ public class ProfessorController implements Serializable{
 			professorServiceImpl.getInserirProfessor(professor);
 			FacesMessages.adicionarMensagem("cadastroProfessorForm:msg", FacesMessage.SEVERITY_INFO, "Cadastrado com sucesso !",
 					null);
-			novo();
 			enviarEmailProfessorCadatrado = true;
-			//professorEmail.assuntoEmail(professor);
+			professorEmail.assuntoEmail(professor,obterEmailUsuarioLogado());
+			novo();
 		} catch (RegraDeNegocioException e) {
 			FacesMessages.adicionarMensagem("cadastroProfessorForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
 					null);
@@ -121,9 +123,9 @@ public class ProfessorController implements Serializable{
 			professorServiceImpl.getAtualizarProfessor(professor);
 			FacesMessages.adicionarMensagem("cadastroProfessorForm:msg", FacesMessage.SEVERITY_INFO, "Atualizado com sucesso !",
 					null);
-			novo();
 			enviarEmailProfessorCadatrado = false;
-			//professorEmail.assuntoEmail(professor);
+			professorEmail.assuntoEmail(professor,obterEmailUsuarioLogado());
+			novo();
 		} catch (RegraDeNegocioException e) {
 			FacesMessages.adicionarMensagem("cadastroProfessorForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
 					null);
@@ -132,9 +134,10 @@ public class ProfessorController implements Serializable{
 	
 	public void excluirProfessor() {
 		try {
-			Professor professor = professorSelecionado;			
+			Professor professor = professorSelecionado;	
+			Professor dadosProfessor = getDadosProfessor(professor.getId());
 			professorServiceImpl.getRemoverProfessor(professor);
-			//professorEmail.assuntoEmailProfessorExcluido(professor);
+			professorEmail.assuntoEmailProfessorExcluido(dadosProfessor,obterEmailUsuarioLogado());
 			consultar();
 			FacesMessages.adicionarMensagem("consultaProfessoresForm:msg", FacesMessage.SEVERITY_INFO, "Removido com sucesso !",
 					null);
@@ -145,6 +148,19 @@ public class ProfessorController implements Serializable{
 			FacesMessages.adicionarMensagem("consultaProfessoresForm:msg", FacesMessage.SEVERITY_ERROR,e.getMessage(),
 					null);
 		}
+	}
+	
+	private Professor getDadosProfessor(Integer id) {
+		Professor professor = new Professor();
+		professor = professorServiceImpl.getConsultarDetalhe(id);
+		return professor;
+	}
+	
+	private String obterEmailUsuarioLogado() {
+		HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance().getExternalContext()
+				.getSession(false);
+		Usuario usuario = (Usuario) httpSession.getAttribute("usuarioLogado");
+		return usuario.getEmail();
 	}
 	
 	public TipoPerfil[] getPerfil() {

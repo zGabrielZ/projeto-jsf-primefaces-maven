@@ -10,9 +10,11 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.RollbackException;
+import javax.servlet.http.HttpSession;
 
 import br.com.gabrielferreira.email.TurmaEmail;
 import br.com.gabrielferreira.entidade.Turma;
+import br.com.gabrielferreira.entidade.Usuario;
 import br.com.gabrielferreira.entidade.dto.TurmaDTO;
 import br.com.gabrielferreira.entidade.enums.Turno;
 import br.com.gabrielferreira.exception.RegraDeNegocioException;
@@ -90,7 +92,7 @@ public class TurmaController implements Serializable{
 			FacesMessages.adicionarMensagem("cadastroTurmasForm:msg", FacesMessage.SEVERITY_INFO, "Cadastrado com sucesso !",
 					null);
 			enviarEmailTurmaCadatrado = true;
-			//turmaEmail.assuntoEmail(turma);
+			turmaEmail.assuntoEmail(turma,obterEmailUsuarioLogado());
 			novo();
 		} catch (RegraDeNegocioException e) {
 			FacesMessages.adicionarMensagem("cadastroTurmasForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
@@ -104,7 +106,7 @@ public class TurmaController implements Serializable{
 			FacesMessages.adicionarMensagem("cadastroTurmasForm:msg", FacesMessage.SEVERITY_INFO,
 					"Atualizado com sucesso !", null);			
 			enviarEmailTurmaCadatrado = false;
-			//turmaEmail.assuntoEmail(turma);
+			turmaEmail.assuntoEmail(turma,obterEmailUsuarioLogado());
 			novo();
 		} catch (RegraDeNegocioException e) {
 			FacesMessages.adicionarMensagem("cadastroTurmasForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
@@ -115,12 +117,13 @@ public class TurmaController implements Serializable{
 	
 	public void excluirTurma() {
 		try {
-			Turma turma = getTurmaDto(turmaSelecionado);			
+			Turma turma = getTurmaDto(turmaSelecionado);
+			Turma dadosTurma = getDadosTurma(turma.getId());
 			turmaServiceImpl.getRemoverTurma(turma);
 			consultar();
 			FacesMessages.adicionarMensagem("consultaTurmasForm:msg", FacesMessage.SEVERITY_INFO, "Removido com sucesso !",
 					null);
-			//turmaEmail.assuntoEmailTurmaExcluido(turma);
+			turmaEmail.assuntoEmailTurmaExcluido(dadosTurma,obterEmailUsuarioLogado());
 		} catch (RollbackException e) {
 			FacesMessages.adicionarMensagem("consultaTurmasForm:msg", FacesMessage.SEVERITY_ERROR, "Não é possível excluir, pois tem aluno ou professor relacionado com essa turma !",
 					"Não é possível excluir !");
@@ -128,6 +131,12 @@ public class TurmaController implements Serializable{
 			FacesMessages.adicionarMensagem("consultaTurmasForm:msg", FacesMessage.SEVERITY_ERROR,e.getMessage(),
 					null);
 		}
+	}
+	
+	private Turma getDadosTurma(Integer id) {
+		Turma dados = new Turma();
+		dados = turmaServiceImpl.getById(id);
+		return dados;
 	}
 
 	private Turma getTurmaDto(TurmaDTO turmaSelecionado) {
@@ -147,5 +156,12 @@ public class TurmaController implements Serializable{
 
 	public Turno[] getTurno() {
 		return Turno.values();
+	}
+	
+	private String obterEmailUsuarioLogado() {
+		HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance().getExternalContext()
+				.getSession(false);
+		Usuario usuario = (Usuario) httpSession.getAttribute("usuarioLogado");
+		return usuario.getEmail();
 	}
 }

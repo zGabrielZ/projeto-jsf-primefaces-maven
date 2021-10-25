@@ -4,14 +4,17 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpSession;
 
 import br.com.gabrielferreira.email.EventoEmail;
 import br.com.gabrielferreira.entidade.ItensTurma;
 import br.com.gabrielferreira.entidade.Professor;
 import br.com.gabrielferreira.entidade.Turma;
+import br.com.gabrielferreira.entidade.Usuario;
 import br.com.gabrielferreira.exception.RegraDeNegocioException;
 import br.com.gabrielferreira.service.impl.ItensTurmasServiceImpl;
 import br.com.gabrielferreira.service.impl.ProfessorServiceImpl;
@@ -68,11 +71,11 @@ public class EventoController implements Serializable{
 	private void inserirItens() {
 		try {
 			itensTurmasServiceImpl.getInserirItensTurmas(itensTurma);
+			eventoEmail.assuntoEmail(itensTurma,obterEmailUsuarioLogado());
 			inicializar();
 			FacesMessages.adicionarMensagem("adicionarEventoForm:msg", FacesMessage.SEVERITY_INFO, "Cadastrado com sucesso !",
 					null);
 			novo();
-			//eventoEmail.assuntoEmail(itensTurma);
 		} catch (RegraDeNegocioException e) {
 			FacesMessages.adicionarMensagem("adicionarEventoForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
 					null);
@@ -80,12 +83,17 @@ public class EventoController implements Serializable{
 	}
 	
 	public void excluirItensTurmas() {
-		ItensTurma itensTurma = itensTurmaSelecionado;			
+		ItensTurma itensTurma = itensTurmaSelecionado;	
+		ItensTurma dadosItens = getDados(itensTurma.getId());
 		itensTurmasServiceImpl.getRemoverItensTurmas(itensTurma);
 		inicializar();
 		FacesMessages.adicionarMensagem("adicionarEventoForm:msg", FacesMessage.SEVERITY_INFO, "Removido com sucesso !",
 				null);
-		//eventoEmail.assuntoEmailItensTurmaExcluido(itensTurma);
+		eventoEmail.assuntoEmailItensTurmaExcluido(dadosItens,obterEmailUsuarioLogado());
+	}
+	
+	private ItensTurma getDados(Integer id) {
+		return itensTurmasServiceImpl.getDetalhe(id);
 	}
 	
 	public List<Turma> getTurmas(){
@@ -96,6 +104,12 @@ public class EventoController implements Serializable{
 		return professorServiceImpl.getListar();
 	}
 	
+	private String obterEmailUsuarioLogado() {
+		HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance().getExternalContext()
+				.getSession(false);
+		Usuario usuario = (Usuario) httpSession.getAttribute("usuarioLogado");
+		return usuario.getEmail();
+	}
 	
 	
 }

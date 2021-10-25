@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.inject.Inject;
 
+import br.com.gabrielferreira.email.config.EmailConfig;
+import br.com.gabrielferreira.entidade.Email;
 import br.com.gabrielferreira.entidade.ItensTurma;
 
 public class EventoEmail implements Serializable{
@@ -16,7 +18,9 @@ public class EventoEmail implements Serializable{
 	@Inject
 	private EmailConfig emailConfig;
 
-	public void assuntoEmail(ItensTurma itensTurma) {
+	public void assuntoEmail(ItensTurma itensTurma, String emailDestino) {
+		
+		Email email = new Email();
 		
 		StringBuilder stringBuilder = new StringBuilder();
 		
@@ -31,13 +35,16 @@ public class EventoEmail implements Serializable{
 		stringBuilder.append("<p style=\"text-align: center;\" > Número : " + itensTurma.getTurma().getNumeroTurma() +"</p> <br/> ");
 		stringBuilder.append("<p style=\"text-align: center;\" > Turno : " + itensTurma.getTurma().getTurno().getDescricao() +"</p> <br/> ");
 		
-		
-		emailConfig.setAssunto("Evento Cadastrado");
-		emailConfig.setTexto(stringBuilder.toString());
-		emailConfig.enviarEmail(true);
+		email.getDestinatarios().add(emailDestino);
+		email.setTitulo("Evento Cadastrado");
+		email.setAssunto(stringBuilder.toString());
+		emailConfig.enviarEmail(email);
 	}
 	
-	public void assuntoEmailItensTurmaExcluido(ItensTurma itensTurma) {
+	public void assuntoEmailItensTurmaExcluido(ItensTurma itensTurma, String emailDestino) {
+		
+		Email email = new Email();
+		
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("<h1 style=\"size: 15px; text-align: center; font-family: sans-serif; \" >Evento deletado com sucesso !</h1> <br/> ");
 		stringBuilder.append("<p style=\"text-align: center;\" > Nome da pessoa : " + itensTurma.getProfessor().getNomeCompleto() +"</p> <br/> ");
@@ -46,9 +53,10 @@ public class EventoEmail implements Serializable{
 		stringBuilder.append("<p style=\"text-align: center;\" > Número da turma : " + itensTurma.getTurma().getNumeroTurma() +"</p> <br/> ");
 		stringBuilder.append("<p style=\"text-align: center;\" > Turno da turma : " + itensTurma.getTurma().getTurno().getDescricao() +"</p> <br/> ");
 		
-		emailConfig.setAssunto("Evento Deletado");
-		emailConfig.setTexto(stringBuilder.toString());
-		emailConfig.enviarEmail(true);
+		email.getDestinatarios().add(emailDestino);
+		email.setTitulo("Evento Deletado");
+		email.setAssunto(stringBuilder.toString());
+		emailConfig.enviarEmail(email);
 	}
 
 }

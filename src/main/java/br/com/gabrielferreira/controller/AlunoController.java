@@ -9,10 +9,12 @@ import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.servlet.http.HttpSession;
 
 import br.com.gabrielferreira.email.AlunoEmail;
 import br.com.gabrielferreira.entidade.Aluno;
 import br.com.gabrielferreira.entidade.Turma;
+import br.com.gabrielferreira.entidade.Usuario;
 import br.com.gabrielferreira.entidade.enums.Sexo;
 import br.com.gabrielferreira.exception.RegraDeNegocioException;
 import br.com.gabrielferreira.search.AlunoSearch;
@@ -96,9 +98,9 @@ public class AlunoController implements Serializable{
 			alunoServiceImpl.getInserirAluno(aluno);
 			FacesMessages.adicionarMensagem("cadastroAlunoForm:msg", FacesMessage.SEVERITY_INFO, "Cadastrado com sucesso !",
 					null);
-			novo();
 			enviarEmailAlunoCadatrado = true;
-			//alunoEmail.assuntoEmail(aluno);
+			alunoEmail.assuntoEmail(aluno,obterEmailUsuarioLogado());
+			novo();
 		} catch (RegraDeNegocioException e) {
 			FacesMessages.adicionarMensagem("cadastroAlunoForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
 					null);
@@ -110,9 +112,9 @@ public class AlunoController implements Serializable{
 			alunoServiceImpl.getAtualizarAluno(aluno);
 			FacesMessages.adicionarMensagem("cadastroAlunoForm:msg", FacesMessage.SEVERITY_INFO, "Atualizado com sucesso !",
 					null);
-			novo();
 			enviarEmailAlunoCadatrado = false;
-			//alunoEmail.assuntoEmail(aluno);
+			alunoEmail.assuntoEmail(aluno,obterEmailUsuarioLogado());
+			novo();
 		} catch (RegraDeNegocioException e) {
 			FacesMessages.adicionarMensagem("cadastroAlunoForm:msg", FacesMessage.SEVERITY_ERROR, e.getMessage(),
 					null);
@@ -121,11 +123,18 @@ public class AlunoController implements Serializable{
 	
 	public void excluirAluno() {
 		Aluno aluno = alunoSelecionado;			
+		Aluno alunoDados = getDados(aluno.getId());
 		alunoServiceImpl.getRemoverAluno(aluno);
-		//alunoEmail.assuntoEmailAlunoExcluido(aluno);
+		alunoEmail.assuntoEmailAlunoExcluido(alunoDados,obterEmailUsuarioLogado());
 		consultar();
 		FacesMessages.adicionarMensagem("consultaAlunosForm:msg", FacesMessage.SEVERITY_INFO, "Removido com sucesso !",
 				null);
+	}
+	
+	private Aluno getDados(Integer id) {
+		Aluno aluno = new Aluno();
+		aluno = alunoServiceImpl.getConsultarDetalhe(id);
+		return aluno;
 	}
 	
 	public List<Turma> getTurmasConsultaAlunos(){
@@ -139,6 +148,13 @@ public class AlunoController implements Serializable{
 	
 	public Sexo[] getSexo() {
 		return Sexo.values();
+	}
+	
+	private String obterEmailUsuarioLogado() {
+		HttpSession httpSession = (HttpSession) FacesContext.getCurrentInstance().getExternalContext()
+				.getSession(false);
+		Usuario usuario = (Usuario) httpSession.getAttribute("usuarioLogado");
+		return usuario.getEmail();
 	}
 	
 	

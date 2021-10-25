@@ -5,7 +5,8 @@ import java.io.Serializable;
 import javax.inject.Inject;
 
 import br.com.gabrielferreira.controller.TelefoneController;
-import br.com.gabrielferreira.email.EmailConfig;
+import br.com.gabrielferreira.email.config.EmailConfig;
+import br.com.gabrielferreira.entidade.Email;
 import br.com.gabrielferreira.entidade.Telefone;
 
 public class TelefoneEmail implements Serializable{
@@ -21,18 +22,21 @@ public class TelefoneEmail implements Serializable{
 	@Inject
 	private TelefoneController telefoneController;
 	
-	public void assuntoEmail(Telefone telefone) {
+	public void assuntoEmail(Telefone telefone, String emailDestino) {
+		
+		Email email = new Email();
+		
 		StringBuilder stringBuilder = new StringBuilder();
 		
 		if(telefoneController.isEnviarEmailTelefoneCadastrado()) {
 			stringBuilder.append("<h1 style=\"size: 15px; text-align: center; font-family: sans-serif; \" >Telefone cadastrado com sucesso !</h1> <br/> ");
-			emailConfig.setAssunto("Telefone Cadastrado");
+			email.setTitulo("Telefone Cadastrado");
 		} else if (telefoneController.isEnviarEmailTelefoneExcluido()){
 			stringBuilder.append("<h1 style=\"size: 15px; text-align: center; font-family: sans-serif; \" >Telefone deletado com sucesso !</h1> <br/> ");
-			emailConfig.setAssunto("Telefone Deletado");
+			email.setTitulo("Telefone Deletado");
 		} else {
 			stringBuilder.append("<h1 style=\"size: 15px; text-align: center; font-family: sans-serif; \" >Telefone atualizado com sucesso !</h1> <br/> ");
-			emailConfig.setAssunto("Telefone Atualizado");
+			email.setTitulo("Telefone Atualizado");
 		}
 		
 		stringBuilder.append("<p style=\"text-align: center;\" > Dados do telefone abaixo:</p> <br/> ");
@@ -40,8 +44,9 @@ public class TelefoneEmail implements Serializable{
 		stringBuilder.append("<p style=\"text-align: center;\" > Número : " + telefone.getNumero() +"</p> <br/> ");
 		stringBuilder.append("<p style=\"text-align: center;\" > Nome da pessoa : " + telefone.getPessoa().getNomeCompleto() +"</p> <br/> ");
 	
-		emailConfig.setTexto(stringBuilder.toString());
-		emailConfig.enviarEmail(true);
+		email.getDestinatarios().add(emailDestino);
+		email.setAssunto(stringBuilder.toString());
+		emailConfig.enviarEmail(email);
 	}
 
 }

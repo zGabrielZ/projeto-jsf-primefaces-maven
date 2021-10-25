@@ -44,4 +44,9 @@ public class ItensTurmasServiceImpl implements Serializable,ItensTurmasService{
 		}
 	}
 
+	@Override
+	public ItensTurma getDetalhe(Integer id) {
+		return itensTurmasRepositorio.pesquisarPorId(id, ItensTurma.class);
+	}
+
 }

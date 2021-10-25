@@ -14,4 +14,5 @@ public interface ItensTurmasService {
 	
 	void getVerificarProfessorAndTurmaRepetido(ItensTurma itensTurma) throws RegraDeNegocioException;
 	
+	ItensTurma getDetalhe(Integer id);
 }
