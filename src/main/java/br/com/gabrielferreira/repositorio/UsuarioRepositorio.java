@@ -1,6 +1,9 @@
 package br.com.gabrielferreira.repositorio;
 
 import java.util.List;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import org.apache.commons.codec.binary.Base64;
@@ -15,9 +18,12 @@ public class UsuarioRepositorio extends RepositorioGenerico<Usuario>{
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	@Inject
+	private EntityManager entityManager;
+	
 	public boolean verificarEmail(String email){
 		String jpql = "SELECT u FROM Usuario u where u.email = :email";
-		TypedQuery<Usuario> query = getEntityManager().createQuery(jpql,Usuario.class);
+		TypedQuery<Usuario> query = entityManager.createQuery(jpql,Usuario.class);
 		query.setParameter("email", email);
 		
 		List<Usuario> usuarios = query.getResultList();
@@ -28,7 +34,7 @@ public class UsuarioRepositorio extends RepositorioGenerico<Usuario>{
 	public Usuario verificarEmailAndSenha(String email, String senha){
 		String senhaTransformada = transformarSenha(senha);
 		String jpql = "SELECT u FROM Usuario u where u.email = :email and u.senha = :senhaTransformada";
-		TypedQuery<Usuario> query = getEntityManager().createQuery(jpql,Usuario.class);
+		TypedQuery<Usuario> query = entityManager.createQuery(jpql,Usuario.class);
 		query.setParameter("email", email);
 		query.setParameter("senhaTransformada", senhaTransformada);
 		

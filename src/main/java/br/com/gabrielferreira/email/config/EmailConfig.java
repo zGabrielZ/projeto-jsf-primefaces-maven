@@ -23,7 +23,7 @@ public class EmailConfig implements ConfiguracaoEmail, Serializable{
 	
 	private static String EMAIL_USUARIO_FINAL = "ferreiragab261297@gmail.com";
 	private static String NOME_USUARIO_FINAL = "Gabriel Ferreira";
-	private static String SENHA_FINAL = "";
+	private static String SENHA_FINAL = "*";
 
 	@Override
 	public Properties definirPropriedades() {

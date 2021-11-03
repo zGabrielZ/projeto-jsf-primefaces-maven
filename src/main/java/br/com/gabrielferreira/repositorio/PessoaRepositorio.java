@@ -1,5 +1,8 @@
 package br.com.gabrielferreira.repositorio;
 import java.util.List;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 
 import br.com.gabrielferreira.entidade.Pessoa;
@@ -11,10 +14,13 @@ public class PessoaRepositorio extends RepositorioGenerico<Pessoa>{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	@Inject
+	private EntityManager entityManager;
 		
 	public boolean verificarCpf(String cpf){
 		String jpql = "SELECT p FROM Pessoa p where p.cpf = :cpf";
-		TypedQuery<Pessoa> query = getEntityManager().createQuery(jpql,Pessoa.class);
+		TypedQuery<Pessoa> query = entityManager.createQuery(jpql,Pessoa.class);
 		query.setParameter("cpf", cpf);
 		
 		List<Pessoa> pessoas = query.getResultList();
@@ -24,7 +30,7 @@ public class PessoaRepositorio extends RepositorioGenerico<Pessoa>{
 	
 	public boolean verificarCpfAtualizado(String cpf,Integer id){
 		String jpql = "SELECT p FROM Pessoa p where p.cpf = :cpf and p.id <> :id";
-		TypedQuery<Pessoa> query = getEntityManager().createQuery(jpql,Pessoa.class);
+		TypedQuery<Pessoa> query = entityManager.createQuery(jpql,Pessoa.class);
 		query.setParameter("cpf", cpf);
 		query.setParameter("id", id);
 		List<Pessoa> verificar = query.getResultList();

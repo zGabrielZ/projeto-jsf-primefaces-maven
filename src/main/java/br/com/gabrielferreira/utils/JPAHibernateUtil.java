@@ -2,10 +2,14 @@ package br.com.gabrielferreira.utils;
 
 import java.io.Serializable;
 
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.context.RequestScoped;
+import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+@ApplicationScoped
 public class JPAHibernateUtil implements Serializable{
 
 	/**
@@ -13,26 +17,17 @@ public class JPAHibernateUtil implements Serializable{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	public static EntityManagerFactory emf = null;
+	private EntityManagerFactory emf;
 	
-	// Não vai ser preciso instanciar, caso chama a classe JPAHibernateUtil, ja vai iniciar a conexão
-	
-	static {
-		iniciar();
+	public JPAHibernateUtil() {
+		emf = Persistence.createEntityManagerFactory("Projeto-Escola");
 	}
 	
-	private static void iniciar() {
-		try {
-			if(emf == null) {
-				emf = Persistence.createEntityManagerFactory("Projeto-Escola");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
+	// Produzir esse entitymanager pra nao ser chamado manualmente
 	// Prover a parte de persistencia
-	public static EntityManager getEntityManager() {
+	@Produces
+	@RequestScoped
+	public EntityManager getEntityManager() {
 		return emf.createEntityManager();
 	}
 

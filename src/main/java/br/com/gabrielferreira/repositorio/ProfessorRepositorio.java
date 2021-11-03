@@ -2,6 +2,9 @@ package br.com.gabrielferreira.repositorio;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -25,8 +28,11 @@ public class ProfessorRepositorio extends RepositorioGenerico<Professor>{
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	@Inject
+	private EntityManager entityManager;
+	
 	public List<Professor> filtrar(ProfessorSearch professorSearch){
-		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		
 		CriteriaQuery<Professor> criteriaQuery = criteriaBuilder.createQuery(Professor.class);
 		Root<Professor> root = criteriaQuery.from(Professor.class);
@@ -60,7 +66,7 @@ public class ProfessorRepositorio extends RepositorioGenerico<Professor>{
 		criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
 		criteriaQuery.where((Predicate[])predicates.toArray(new Predicate[0]));
 		
-		TypedQuery<Professor> typedQuery = getEntityManager().createQuery(criteriaQuery);
+		TypedQuery<Professor> typedQuery = entityManager.createQuery(criteriaQuery);
 
 		List<Professor> professores = typedQuery.getResultList();
 		
@@ -69,20 +75,20 @@ public class ProfessorRepositorio extends RepositorioGenerico<Professor>{
 	
 	public List<Professor> verificarProfessorId(Integer id){
 		String jpql = "SELECT p FROM Professor p where p.id = :id";
-		TypedQuery<Professor> query = getEntityManager().createQuery(jpql,Professor.class);
+		TypedQuery<Professor> query = entityManager.createQuery(jpql,Professor.class);
 		query.setParameter("id", id);
 		return query.getResultList();
 	}
 	
 	public List<Professor> listarProfessores(){
 		String jpql = "SELECT p FROM Professor p";
-		TypedQuery<Professor> query = getEntityManager().createQuery(jpql,Professor.class);
+		TypedQuery<Professor> query = entityManager.createQuery(jpql,Professor.class);
 		return query.getResultList();
 	}
 	
 	@SuppressWarnings("unchecked")
 	public List<ProfessorRelDTO> listarProfessoresRelatorio(String nome, String sexo, String graduacao){
-		Query query = getEntityManager().createNamedQuery("Professor.findListarProfessores");
+		Query query = entityManager.createNamedQuery("Professor.findListarProfessores");
 		query.setParameter("nome", "%"+nome+"%");
 		query.setParameter("sexo", "%"+sexo+"%");
 		query.setParameter("graduacao", "%"+graduacao+"%");

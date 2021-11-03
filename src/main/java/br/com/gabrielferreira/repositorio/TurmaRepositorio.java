@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -26,8 +28,11 @@ public class TurmaRepositorio extends RepositorioGenerico<Turma>{
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	@Inject
+	private EntityManager entityManager;
+	
 	public List<TurmaDTO> filtrar(TurmaSearch turmaSearch){
-		CriteriaBuilder criteriaBuilder = getEntityManager().getCriteriaBuilder();
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		
 		CriteriaQuery<Turma> criteriaQuery = criteriaBuilder.createQuery(Turma.class);
 		Root<Turma> root = criteriaQuery.from(Turma.class);
@@ -52,7 +57,7 @@ public class TurmaRepositorio extends RepositorioGenerico<Turma>{
 		criteriaQuery.orderBy(criteriaBuilder.desc(root.get("id")));
 		criteriaQuery.where((Predicate[])predicates.toArray(new Predicate[0]));
 		
-		TypedQuery<Turma> typedQuery = getEntityManager().createQuery(criteriaQuery);
+		TypedQuery<Turma> typedQuery = entityManager.createQuery(criteriaQuery);
 
 		List<Turma> turmas = typedQuery.getResultList();
 		
@@ -61,7 +66,7 @@ public class TurmaRepositorio extends RepositorioGenerico<Turma>{
 
 	public boolean verificarNomeAndTurno(String nome,Turno turno){
 		String jpql = "SELECT t FROM Turma t where t.nomeTurma = :nome and t.turno = :turno";
-		TypedQuery<Turma> query = getEntityManager().createQuery(jpql,Turma.class);
+		TypedQuery<Turma> query = entityManager.createQuery(jpql,Turma.class);
 		query.setParameter("nome", nome);
 		query.setParameter("turno", turno);
 		
@@ -72,7 +77,7 @@ public class TurmaRepositorio extends RepositorioGenerico<Turma>{
 	
 	public boolean verificarNomeAndTurnoAtualizado(String nome,Turno turno,Integer id){
 		String jpql = "SELECT t FROM Turma t where t.nomeTurma = :nome and t.turno = :turno and t.id <> :id ";
-		TypedQuery<Turma> query = getEntityManager().createQuery(jpql,Turma.class);
+		TypedQuery<Turma> query = entityManager.createQuery(jpql,Turma.class);
 		query.setParameter("nome", nome);
 		query.setParameter("turno", turno);
 		query.setParameter("id", id);
@@ -84,7 +89,7 @@ public class TurmaRepositorio extends RepositorioGenerico<Turma>{
 		
 	public boolean verificarNumeroAtualizado(String numero,Integer id){
 		String jpql = "SELECT t FROM Turma t where t.numeroTurma = :numero and t.id <> :id";
-		TypedQuery<Turma> query = getEntityManager().createQuery(jpql,Turma.class);
+		TypedQuery<Turma> query = entityManager.createQuery(jpql,Turma.class);
 		query.setParameter("numero", numero);
 		query.setParameter("id", id);
 		List<Turma> verificar = query.getResultList();
@@ -94,7 +99,7 @@ public class TurmaRepositorio extends RepositorioGenerico<Turma>{
 	
 	public boolean verificarNumero(String numero){
 		String jpql = "SELECT t FROM Turma t where t.numeroTurma = :numero";
-		TypedQuery<Turma> query = getEntityManager().createQuery(jpql,Turma.class);
+		TypedQuery<Turma> query = entityManager.createQuery(jpql,Turma.class);
 		query.setParameter("numero", numero);
 		List<Turma> turmas = query.getResultList();
 		return !turmas.isEmpty() ? true : false;
@@ -102,14 +107,14 @@ public class TurmaRepositorio extends RepositorioGenerico<Turma>{
 	
 	public List<Turma> verificarTurmaId(Integer id){
 		String jpql = "SELECT t FROM Turma t where t.id = :id";
-		TypedQuery<Turma> query = getEntityManager().createQuery(jpql,Turma.class);
+		TypedQuery<Turma> query = entityManager.createQuery(jpql,Turma.class);
 		query.setParameter("id", id);
 		return query.getResultList();
 	}
 	
 	public Turma getTurmaDetalhes(Integer idTurma){
 		String jpql = "SELECT t FROM Turma t left join t.alunos a left join t.itensTurmas i where t.id = :idTurma";
-		TypedQuery<Turma> query = getEntityManager().createQuery(jpql,Turma.class);
+		TypedQuery<Turma> query = entityManager.createQuery(jpql,Turma.class);
 		query.setParameter("idTurma", idTurma);
 		Turma turma = verificarNulo(query);
 		return turma;
@@ -118,7 +123,7 @@ public class TurmaRepositorio extends RepositorioGenerico<Turma>{
 	
 	@SuppressWarnings("unchecked")
 	public List<TurmaRelDTO> listarTurmasRelatorio(String nome, String turno){
-		Query query = getEntityManager().createNamedQuery("Turma.findListarTurmas");
+		Query query = entityManager.createNamedQuery("Turma.findListarTurmas");
 		query.setParameter("nome", "%"+nome+"%");
 		query.setParameter("turno", "%"+turno+"%");
 		

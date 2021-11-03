@@ -3,12 +3,14 @@ package br.com.gabrielferreira.repositorio.generico;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
-import br.com.gabrielferreira.utils.JPAHibernateUtil;
 
+@Named
 public class RepositorioGenerico<T> implements Serializable {
 
 	/**
@@ -16,7 +18,8 @@ public class RepositorioGenerico<T> implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private EntityManager entityManager = JPAHibernateUtil.getEntityManager();
+	@Inject
+	private EntityManager entityManager;
 	
 	public void inserir(T entidade) {
 		entityManager.getTransaction().begin();
@@ -56,10 +59,6 @@ public class RepositorioGenerico<T> implements Serializable {
 		} catch (NoResultException e) {
 			return null;
 		}
-	}
-
-	public EntityManager getEntityManager() {
-		return entityManager;
 	}
 
 }

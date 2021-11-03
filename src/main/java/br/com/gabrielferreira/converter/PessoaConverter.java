@@ -9,6 +9,7 @@ import javax.inject.Named;
 
 import br.com.gabrielferreira.entidade.Pessoa;
 import br.com.gabrielferreira.service.impl.PessoaServiceImpl;
+
 @Named
 @RequestScoped
 public class PessoaConverter implements Converter{
