@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+	xmlns:h="http://xmlns.jcp.org/jsf/html"
+	xmlns:f="http://xmlns.jcp.org/jsf/core"
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
+
+<ui:composition template="/layout/login/TelaLogin.xhtml">
+
+	<ui:define name="titulo">
+		<h1>Atualizar senha</h1>
+
+		<div id="panelTitulo" style="margin-bottom: 10px; margin-top: 10px;">
+			<p:outputLabel value="Por favor, infome seu email abaixo." />
+		</div>
+
+	</ui:define>
+
+	<ui:define name="conteudo">
+		<h:form id="updateUsuarioForm">
+
+			<p:messages id="msg" autoUpdate="true" />
+
+			<div align="center">
+				<h:panelGrid columns="2" style="text-align: center" rendered="#{!usuarioController.codigoEnviado}" >
+					<p:outputLabel for="email" value="E-mail: " />
+					<p:inputText label="E-mail" id="email"
+						value="#{usuarioController.buscarUsuarioEmail.email}" required="true"
+						requiredMessage="E-mail é necessário">
+					</p:inputText>
+
+					<p:commandButton style="width:100%;" value="Login" ajax="false"
+						action="#{navegacaoController.login}">
+						<o:skipValidators />
+					</p:commandButton>
+					<p:commandButton style="width:100%;" value="Enviar" action="#{usuarioController.enviarCodigo}"
+						ajax="false" update="@form, :frmCodigoEnviarEmail"  />
+
+				</h:panelGrid>
+			</div>
+		</h:form>
+
+		<h:form id="frmCodigoEnviarEmail" >
+			<div align="center" style="margin-top: 30px;">
+				<h:panelGrid columns="2" style="text-align: center" rendered="#{usuarioController.codigoEnviado}" >
+					<p:outputLabel for="codigo" value="Código: " />
+					<p:inputText label="Código" id="codigo"
+						required="true" value="#{usuarioController.codigo}"
+						requiredMessage="Código é necessário">
+					</p:inputText>
+
+					<p:outputLabel for="senha" value="Senha: " />
+					<p:password label="Senha" id="senha"
+						required="true" value="#{usuarioController.senha}"
+						requiredMessage="Senha é necessário">
+					</p:password>
+
+					<p:outputLabel />
+					<p:commandButton style="width:100%;" value="Trocar senha" ajax="false" 
+						action="#{usuarioController.atualizarSenha}" update="@form, :updateUsuarioForm" />
+				</h:panelGrid>
+			</div>
+		</h:form>
+
+	</ui:define>
+
+</ui:composition>
+</html>

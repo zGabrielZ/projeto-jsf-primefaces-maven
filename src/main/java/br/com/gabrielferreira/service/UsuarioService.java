@@ -7,8 +7,14 @@ public interface UsuarioService {
 
 	void getInserirUsuario(Usuario usuario) throws RegraDeNegocioException;
 	
+	Usuario getAtualizarSenhaUsuario(Usuario usuario);
+	
 	void getVerificarEmail(Usuario usuario) throws RegraDeNegocioException;
 	
 	Usuario getVerificarEmailAndSenha(String email, String senha);
+	
+	Usuario getUsuario(String email);
+	
+	void getVerificarEmailTrocarSenha(Usuario usuario) throws RegraDeNegocioException;
 
 }

@@ -31,6 +31,14 @@ public class UsuarioRepositorio extends RepositorioGenerico<Usuario>{
 		return !usuarios.isEmpty() ? true : false;
 	}
 	
+	public Usuario getUsuarioByEmail(String email) {
+		String jpql = "SELECT u FROM Usuario u where u.email = :email";
+		TypedQuery<Usuario> query = entityManager.createQuery(jpql,Usuario.class);
+		query.setParameter("email", email);
+		Usuario usuario = verificarNulo(query);
+		return usuario;
+	}
+	
 	public Usuario verificarEmailAndSenha(String email, String senha){
 		String senhaTransformada = transformarSenha(senha);
 		String jpql = "SELECT u FROM Usuario u where u.email = :email and u.senha = :senhaTransformada";
@@ -42,7 +50,7 @@ public class UsuarioRepositorio extends RepositorioGenerico<Usuario>{
 		return usuario;
 	}
 	
-	private String transformarSenha(String senha) {
+	public String transformarSenha(String senha) {
 		Base64 base64 = new Base64();
 		String senhaSerializada = base64.encodeAsString(senha.getBytes());
 		return senhaSerializada;

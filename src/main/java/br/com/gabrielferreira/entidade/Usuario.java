@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
@@ -49,6 +50,9 @@ public class Usuario implements Serializable{
 	@NotBlank(message = "Campo da senha não pode ser vazia")
 	@Size(max = 150,message = "Não pode passa de 150 caracteres")
 	private String senha;
+	
+	@Transient
+	private Integer codigoGerado;
 
 	@Override
 	public int hashCode() {

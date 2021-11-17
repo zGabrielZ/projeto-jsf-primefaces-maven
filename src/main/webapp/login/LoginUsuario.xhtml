@@ -5,8 +5,7 @@
 	xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
 	xmlns:h="http://xmlns.jcp.org/jsf/html"
 	xmlns:f="http://xmlns.jcp.org/jsf/core"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:o="http://omnifaces.org/ui">
+	xmlns:p="http://primefaces.org/ui" xmlns:o="http://omnifaces.org/ui">
 
 <ui:composition template="/layout/login/TelaLogin.xhtml">
 
@@ -30,23 +29,39 @@
 			<div align="center">
 				<h:panelGrid columns="2" style="text-align: center">
 					<p:outputLabel for="email" value="E-mail: " />
-					<p:inputText value="#{loginController.usuario.email}" required="true"
-						label="E-mail" id="email">
+					<p:inputText value="#{loginController.usuario.email}"
+						required="true" label="E-mail" id="email">
 					</p:inputText>
 
 					<p:outputLabel for="senha" value="Senha: " />
-					<p:password label="Senha" value="#{loginController.usuario.senha}" required="true"
-						id="senha" />
-						
-					<p:commandButton value="Logar" action="#{loginController.logar}"
-					 ajax="false" update="@form" style="width:100%;" ></p:commandButton>
-					 
-					 <p:commandButton style="width:100%;" value="Cadastrar"
-					 ajax="false" action="#{navegacaoController.cadastrarUsuario}">
-						<o:skipValidators />	 
-					</p:commandButton>
-					
+					<p:password label="Senha" value="#{loginController.usuario.senha}"
+						required="true" id="senha" />
 				</h:panelGrid>
+
+				<h:panelGrid columns="3">
+					<p:column>
+						<p:commandButton value="Logar" action="#{loginController.logar}"
+							ajax="false" update="@form" style="width:100%;"></p:commandButton>
+					</p:column>
+
+					<p:column>
+						<p:commandButton style="width:100%;" value="Cadastrar"
+							update="@form" ajax="false"
+							action="#{navegacaoController.cadastrarUsuario}">
+							<o:skipValidators />
+						</p:commandButton>
+					</p:column>
+
+					<p:column>
+						<p:commandButton style="width:100%;" value="Atualizar senha"
+							ajax="false"
+							action="#{navegacaoController.atualizarSenhaUsuario}">
+							<o:skipValidators />
+						</p:commandButton>
+					</p:column>
+				</h:panelGrid>
+
+
 			</div>
 		</h:form>
 

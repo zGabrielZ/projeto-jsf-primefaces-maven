@@ -22,6 +22,8 @@ public class UsuarioServiceImpl implements Serializable,UsuarioService{
 	@Override
 	public void getInserirUsuario(Usuario usuario) throws RegraDeNegocioException {
 		getVerificarEmail(usuario);
+		String senhaCriptografada = usuarioRepositorio.transformarSenha(usuario.getSenha());
+		usuario.setSenha(senhaCriptografada);
 		usuarioRepositorio.inserir(usuario);
 	}
 
@@ -36,6 +38,26 @@ public class UsuarioServiceImpl implements Serializable,UsuarioService{
 	public Usuario getVerificarEmailAndSenha(String email, String senha) {
 		Usuario usuario = usuarioRepositorio.verificarEmailAndSenha(email, senha);
 		return usuario;
+	}
+
+	@Override
+	public Usuario getUsuario(String email) {
+		Usuario usuario = usuarioRepositorio.getUsuarioByEmail(email);
+		return usuario;
+	}
+
+	@Override
+	public Usuario getAtualizarSenhaUsuario(Usuario usuario) {
+		String senhaCriptografada = usuarioRepositorio.transformarSenha(usuario.getSenha());
+		usuario.setSenha(senhaCriptografada);
+		return usuarioRepositorio.atualizar(usuario);
+	}
+
+	@Override
+	public void getVerificarEmailTrocarSenha(Usuario usuario) throws RegraDeNegocioException {
+		if(!usuarioRepositorio.verificarEmail(usuario.getEmail())) {
+			throw new RegraDeNegocioException("Não existe este e-mail cadastrado no nosso sistema !");
+		}
 	}
 	
 	

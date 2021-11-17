@@ -20,6 +20,16 @@ public class NavegacaoController implements Serializable{
 		return FacesContext.getCurrentInstance().getExternalContext();
 	}
 	
+	public void atualizarSenhaUsuario() {
+	    ExternalContext externalContext = getExternalContext();
+	    try {
+	          externalContext.redirect(externalContext.getRequestContextPath()
+	                + "/login/AtualizarSenhaUsuarioLogin.xhtml");
+	    } catch (IOException e) {
+	          e.printStackTrace();
+	    }
+	}
+	
 	public void cadastrarUsuario() {
 	    ExternalContext externalContext = getExternalContext();
 	    try {
